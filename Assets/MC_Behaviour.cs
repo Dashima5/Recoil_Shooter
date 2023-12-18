@@ -4,40 +4,34 @@ using UnityEngine;
 
 public class BCBehaviourScript : MonoBehaviour
 {
-    public Camera mainCam;
-    private Vector3 mousePos;
+    private Vector3 mouseWorldPos;
     private Vector3 selfPos;
-    private Rigidbody2D selfRd;
-    private Ray mouseRay;
+    private Vector3 selfScreenPos;
+    private Rigidbody2D selfRb;
     public GameObject pointer;
-    // Start is called before the first frame update
+
     void Start()
     {
-// mainCam = GameObject.FindGameObjectWithTag("Main Camera").GetComponent<Camera>();
-        selfRd = GetComponent<Rigidbody2D>();
+        selfRb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
     {
-        mousePos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+        mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         selfPos = transform.position;
 
-        Vector3 rotate = mousePos - pointer.transform.position;
+        Vector3 rotate = mouseWorldPos - pointer.transform.position;
         float rotZ = Mathf.Atan2(rotate.y, rotate.x) * Mathf.Rad2Deg;
         pointer.transform.rotation = Quaternion.Euler(0,0,rotZ);
 
         if (Input.GetMouseButtonDown(0)) {
-            mouseRay = mainCam.ScreenPointToRay(Input.mousePosition);
-            Vector3 Newmove = mousePos;
-            Newmove.Normalize();
-            Newmove.z = 0;
-            Vector3 NewRay = mouseRay.GetPoint(10);
-            NewRay = NewRay - selfPos;
-            NewRay.Normalize();
-            NewRay.z = 0;
-            selfRd.AddForce(-NewRay*10,ForceMode2D.Impulse);
+            selfScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+            Vector3 MoveDir = (Vector3)(Input.mousePosition-selfScreenPos);
+            MoveDir.Normalize();
+            MoveDir.z = 0;
+            selfRb.AddForce(-MoveDir*10,ForceMode2D.Impulse);
             
-            Debug.Log("mousePos: " + Newmove + ", " + "mouseRay:" + NewRay + "\n" + "포인터 위치: " + pointer.transform.position);
+            Debug.Log("MoveDir: " + MoveDir);
         }
     }
 }
