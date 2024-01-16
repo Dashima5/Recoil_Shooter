@@ -11,7 +11,7 @@ public class player : MonoBehaviour
     private Rigidbody2D selfRb;
     public GameObject pointer;
     public GameObject bulletPrefap;
-    public float bulletspeed = 3f;
+    private float bulletspeed = 10f;
 
     void Start()
     {
@@ -37,12 +37,18 @@ public class player : MonoBehaviour
             GameObject newbullet = Instantiate(bulletPrefap) as GameObject;
             newbullet.transform.position = transform.position;
             newbullet.transform.rotation = Quaternion.Euler(0, 0, rotZ);
-            newbullet.GetComponent<Rigidbody2D>().velocity = new Vector3(direction.x, direction.y,0).normalized * bulletspeed;
+            newbullet.GetComponent<Rigidbody2D>().velocity = new Vector3(direction.x, direction.y, 0).normalized * bulletspeed;
+            Debug.Log(newbullet.GetComponent<Rigidbody2D>().velocity);
         }
 
-        if (Input.GetKey(KeyCode.A) && selfRb.velocity.x > -5) selfRb.AddForce(Vector3.left*5, ForceMode2D.Force);
-        if (Input.GetKey(KeyCode.D) && selfRb.velocity.x < 5) selfRb.AddForce(Vector3.right*5, ForceMode2D.Force);
-   
+        //Debug.Log(selfRb.velocity);
         
+    }
+
+    private void FixedUpdate()
+    { 
+
+        if (Input.GetKey(KeyCode.A) && selfRb.velocity.x > -4.9f) selfRb.AddForce(Vector3.left * 15, ForceMode2D.Force);
+        if (Input.GetKey(KeyCode.D) && selfRb.velocity.x < 4.9f) selfRb.AddForce(Vector3.right * 15, ForceMode2D.Force);
     }
 }

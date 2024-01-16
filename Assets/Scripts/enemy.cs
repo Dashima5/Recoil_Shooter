@@ -1,25 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
-using UnityEditor.UI;
 using UnityEngine;
 
-public class bullet : MonoBehaviour
+public class enemy : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float speed = 3f;
-    
-    public bullet()
-    {
-    }
+    private float HP = 5f;
     void Start()
     {
-        Destroy(gameObject, 3f);
+        
     }
-
 
     // Update is called once per frame
     void Update()
-    { 
+    {
+        if(HP <=0) { gameObject.SetActive(false); }
+    }
+
+    public void hit(float damage)
+    {
+        HP -= damage;
     }
 }
