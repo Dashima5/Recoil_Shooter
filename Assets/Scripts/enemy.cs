@@ -14,11 +14,12 @@ public class enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(HP <=0) { gameObject.SetActive(false); }
+        if (HP <= 0) { gameObject.SetActive(false); }
     }
 
     public void hit(float damage)
     {
         HP -= damage;
+        Debug.Log("대미지 " + damage + " 받음");
     }
 }

@@ -25,7 +25,7 @@ public class bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.transform.CompareTag("Level")) { Destroy(gameObject); }
-        if (other.transform.CompareTag("Enemy"))
+        if(other.transform.CompareTag("Enemy"))
         {
             enemy e = other.gameObject.GetComponent<enemy>();
             if (e != null)
