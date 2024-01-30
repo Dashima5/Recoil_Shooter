@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class enemy : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     // Start is called before the first frame update
     private float HP = 5f;
@@ -14,12 +14,13 @@ public class enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (HP <= 0) { gameObject.SetActive(false); }
+        
     }
 
     public void hit(float damage)
     {
         HP -= damage;
         Debug.Log("대미지 " + damage + " 받음");
+        if (HP <= 0) { gameObject.SetActive(false); }
     }
 }

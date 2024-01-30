@@ -10,7 +10,7 @@ public class bullet : MonoBehaviour
     // Start is called before the first frame update
     public float speed = 5f;
     private float damage = 1f;
-    Rigidbody2D rb;
+    Rigidbody2D Rb;
 
     void Start()
     {
@@ -27,7 +27,7 @@ public class bullet : MonoBehaviour
         if (other.transform.CompareTag("Level")) { Destroy(gameObject); }
         if(other.transform.CompareTag("Enemy"))
         {
-            enemy e = other.gameObject.GetComponent<enemy>();
+            Enemy e = other.gameObject.GetComponent<Enemy>();
             if (e != null)
             {
                 e.hit(damage);
