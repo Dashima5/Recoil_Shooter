@@ -2,29 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Gun : MonoBehaviour
+public abstract class Gun : MonoBehaviour
 {
-    [SerializeField] private GunData gunData;
-    
-    public void Shoot(float rotZ, Vector3 direction)
-    {
-        GameObject newbullet = Instantiate(gunData.bullet) as GameObject;
-        newbullet.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0, 0, rotZ));
-        newbullet.GetComponent<Rigidbody2D>().velocity = new Vector3(direction.x, direction.y, 0).normalized * gunData.bulletSpeed;
-    }
+    [SerializeField] protected GunData gunData;
 
-    public float GetRecoil()
+    protected float TimeSincelastFire;
+    protected bool CanShoot() => !gunData.reloading && TimeSincelastFire > 1f / (gunData.fireRate / 60f);
+    public abstract void Fire(float rotZ, Vector3 Dir, Rigidbody2D Rb, float Maxspeed);
+
+    private void Update()
     {
-        return gunData.recoil;
-    }
-    void Start()
-    {
-        
+        TimeSincelastFire += Time.deltaTime;
     }
 
 
-    void Update()
-    {
-        
-    }
 }

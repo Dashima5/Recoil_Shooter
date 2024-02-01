@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Android.Types;
 using UnityEngine;
 
 public class WeaponHolder : MonoBehaviour
@@ -7,15 +8,20 @@ public class WeaponHolder : MonoBehaviour
     private Transform Player;
     private Rigidbody2D Rb;
     private Vector3 mouseWorldPos;
-    private Vector3 PlayerScreenPos;
-    private Gun Pistol;
+    private List<Gun> Weapons = new ();
+    private int Holdindex = 0;
     public float mouseMaxspeed = 15f;
+    private Vector3 rotate;
+    private float rotZ;
    
     void Start()
     {
         Player = transform.parent;
         Rb = Player.GetComponent<Rigidbody2D>();
-        Pistol = transform.Find("pistol").gameObject.GetComponent<Gun>();
+        for(int i = 0; i < transform.childCount && i < 4; i++)
+        {
+            if(transform.GetChild(i).gameObject.TryGetComponent<Gun>(out var FindingGun)) { Weapons.Add(FindingGun); }
+        }
     }
 
    
@@ -23,28 +29,33 @@ public class WeaponHolder : MonoBehaviour
     {
         mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        Vector3 rotate = mouseWorldPos - transform.position;
-        float rotZ = Mathf.Atan2(rotate.y, rotate.x) * Mathf.Rad2Deg;
+        rotate = mouseWorldPos - transform.position;
+        rotZ = Mathf.Atan2(rotate.y, rotate.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, rotZ);
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Holdindex += 1; Holdindex %= Weapons.Count;
+            for (int i = 0; i < Weapons.Count; i++)
+            {
+                if (Weapons[i] != null)
+                {
+                    if (i == Holdindex) { Weapons[i].gameObject.SetActive(true); }
+                    else { Weapons[i].gameObject.SetActive(false); }
+                }
+            }
+        }
+       
     }
 
-    public void Shoot()
+    public void Fire()
     {
-        Vector3 direction = mouseWorldPos - Player.position;
-        Vector3 rotate = mouseWorldPos - transform.position;
-        float rotZ = Mathf.Atan2(rotate.y, rotate.x) * Mathf.Rad2Deg;
 
-        PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
-        Vector3 MoveDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
-        MoveDir.Normalize();
-        MoveDir.z = 0;
-        float recoil = Pistol.GetRecoil();
-        Rb.AddForce(-MoveDir * recoil, ForceMode2D.Impulse);
-        if (Rb.velocity.x > mouseMaxspeed) { Rb.velocity = new Vector3(mouseMaxspeed, Rb.velocity.y, 0); }
-        else if (Rb.velocity.x < -mouseMaxspeed) { Rb.velocity = new Vector3(-mouseMaxspeed, Rb.velocity.y, 0); }
-        if (Rb.velocity.y > mouseMaxspeed) { Rb.velocity = new Vector3(Rb.velocity.x, mouseMaxspeed, 0); }
-        else if (Rb.velocity.y < -mouseMaxspeed) { Rb.velocity = new Vector3(Rb.velocity.x, -mouseMaxspeed, 0); }
+        Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
+        Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
+        FireDir.Normalize();
+        FireDir.z = 0;
 
-        Pistol.Shoot(rotZ, direction);
+        Weapons[Holdindex].Fire(transform.rotation.z, FireDir, Rb, mouseMaxspeed);
     }
 }
