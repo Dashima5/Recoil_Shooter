@@ -15,9 +15,10 @@ MonoBehaviour:
   name: Valkan
   damage: 1.5
   recoil: 2.5
-  magsize: 100
+  magsize: 50
   fireRate: 500
   reloadTime: 5
+  pReloadMult: 10
   bullet: {fileID: 990272475781579284, guid: 19cb67d81ddad334a9c4a6eedc8ef9bd, type: 3}
   bulletSpeed: 50
   reloading: 0

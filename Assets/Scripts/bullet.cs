@@ -9,6 +9,9 @@ public class Bullet : MonoBehaviour
 {
     // Start is called before the first frame update
     private float damage = 1f;
+    private Vector3 oldPos;
+    private float travelDis = 0;
+    private float MaxtravelDis = 25f;
     
 
     public void Set(float damage, float speed, Vector3 position, float rotZ, Vector3 direction)
@@ -19,12 +22,18 @@ public class Bullet : MonoBehaviour
     }
     void Start()
     {
+        oldPos = transform.position;
         Destroy(gameObject, 3f);
     }
 
     // Update is called once per frame
     void Update()
-    { 
+    {
+        Vector3 distanceVector = transform.position - oldPos;
+        float distanceThisFrame = distanceVector.magnitude;
+        travelDis += distanceThisFrame;
+        if (travelDis >= MaxtravelDis) { Destroy(gameObject); }
+        else oldPos = transform.position;
     }
 
     private void OnTriggerEnter2D(Collider2D other)

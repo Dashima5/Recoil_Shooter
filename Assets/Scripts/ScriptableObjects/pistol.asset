@@ -18,6 +18,7 @@ MonoBehaviour:
   magsize: 8
   fireRate: 300
   reloadTime: 2
+  pReloadMult: 1
   bullet: {fileID: 990272475781579284, guid: 19cb67d81ddad334a9c4a6eedc8ef9bd, type: 3}
   bulletSpeed: 20
   reloading: 0

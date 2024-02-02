@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -9,6 +10,11 @@ public class Player : MonoBehaviour
     private WeaponHolder weaponHolder;
     public float buttonMaxspeed = 4.8f;
     public float buttonMinspeed = 1f;
+
+    public Text SpeedMag;
+    public Text SpeedX;
+    public Text SpeedY;
+
     void Start()
     {
         Rb = GetComponent<Rigidbody2D>();
@@ -17,9 +23,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        
         weaponHolder.Fire();
-        
         
         if (Input.GetKeyUp(KeyCode.A) && Mathf.Abs(Rb.velocity.x) < buttonMinspeed) Rb.velocity = new Vector3(0,Rb.velocity.y,0);
         if (Input.GetKeyUp(KeyCode.D) && Mathf.Abs(Rb.velocity.x) < buttonMinspeed) Rb.velocity = new Vector3(0, Rb.velocity.y, 0);
@@ -31,7 +35,9 @@ public class Player : MonoBehaviour
             if(Mathf.Abs(Rb.velocity.y) < buttonMinspeed) Rb.velocity = new Vector3(Rb.velocity.x, 0, 0);
             Rb.velocity = new Vector3(Rb.velocity.x/2*Time.deltaTime, Rb.velocity.y/2* Time.deltaTime, 0); }
 
-        Debug.Log(Rb.velocity);
+        SpeedMag.text = "¼Óµµ" + Rb.velocity.magnitude.ToString("F2");
+        SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
+        SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
     }
 
     private void FixedUpdate()

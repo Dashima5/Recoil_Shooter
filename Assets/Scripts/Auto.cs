@@ -17,6 +17,7 @@ public class Auto : Gun
             GameObject newbullet = Instantiate(gunData.bullet) as GameObject;
             newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, transform.position, rotZ, Dir);
 
+            Ammo -= 1f;
             TimeSincelastFire = 0;
         }
     }
