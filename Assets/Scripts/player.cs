@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     private WeaponHolder weaponHolder;
     public float buttonMaxspeed = 4.8f;
     public float buttonMinspeed = 1f;
+    public bool Diving = false;
 
     public Text SpeedMag;
     public Text SpeedX;
@@ -27,10 +28,23 @@ public class Player : MonoBehaviour
         
         if (Input.GetKeyUp(KeyCode.A) && Mathf.Abs(Rb.velocity.x) < buttonMinspeed) Rb.velocity = new Vector3(0,Rb.velocity.y,0);
         if (Input.GetKeyUp(KeyCode.D) && Mathf.Abs(Rb.velocity.x) < buttonMinspeed) Rb.velocity = new Vector3(0, Rb.velocity.y, 0);
-        if (Input.GetKeyUp(KeyCode.S) && Mathf.Abs(Rb.velocity.y) < buttonMinspeed) Rb.velocity = new Vector3(Rb.velocity.x, 0, 0);
-        if (Input.GetKeyUp(KeyCode.W) && Mathf.Abs(Rb.velocity.y) < buttonMinspeed) Rb.velocity = new Vector3(Rb.velocity.x, 0, 0);
+        if (Input.GetKeyDown(KeyCode.S)) { Rb.velocity = Vector3.zero; Diving = true; }
+        if (Diving)
+        {
+            RaycastHit2D ray2ground = Physics2D.Raycast(Rb.position, Vector3.down, 1, LayerMask.GetMask("Platform"));
+            if ((ray2ground.collider != null && ray2ground.distance <= 0.5f) | Rb.velocity.y > 0)
+            {
+                Rb.velocity = Vector3.zero;
+                Diving = false;
+            }
+            else if(Rb.velocity.y < -50) { Rb.velocity = Vector3.down * 50; }
+            else
+            {
+                Rb.AddForce(Vector3.down * 50, ForceMode2D.Force);
+            }
+        }
 
-        if (Input.GetKey(KeyCode.Space)) { 
+            if (Input.GetKey(KeyCode.Space)) { 
             if(Mathf.Abs(Rb.velocity.x) < buttonMinspeed) Rb.velocity = new Vector3(0, Rb.velocity.y, 0);
             if(Mathf.Abs(Rb.velocity.y) < buttonMinspeed) Rb.velocity = new Vector3(Rb.velocity.x, 0, 0);
             Rb.velocity = new Vector3(Rb.velocity.x/2*Time.deltaTime, Rb.velocity.y/2* Time.deltaTime, 0); }
@@ -44,8 +58,6 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A) && Rb.velocity.x > -buttonMaxspeed) Rb.AddForce(Vector3.left * 20, ForceMode2D.Force);
         if (Input.GetKey(KeyCode.D) && Rb.velocity.x < buttonMaxspeed) Rb.AddForce(Vector3.right * 20, ForceMode2D.Force);
-        if (Input.GetKey(KeyCode.S) && Rb.velocity.y > -buttonMaxspeed) Rb.AddForce(Vector3.down * 20, ForceMode2D.Force);
-        if (Input.GetKey(KeyCode.W) && Rb.velocity.y < buttonMaxspeed) Rb.AddForce(Vector3.up * 20, ForceMode2D.Force);
     }
 
     private void OnCollisionEnter2D(Collision2D other)

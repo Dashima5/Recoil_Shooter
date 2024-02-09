@@ -37,6 +37,11 @@ public class WeaponHolder : MonoBehaviour
         rotate = mouseWorldPos - transform.position;
         rotZ = Mathf.Atan2(rotate.y, rotate.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, rotZ);
+        if (Mathf.Abs(rotZ) > 90) 
+        {
+            Weapons[Holdindex].Flip(true);
+        }
+        else { Weapons[Holdindex].Flip(false); }
 
         if (Input.GetKeyDown(KeyCode.R)){ Weapons[Holdindex].StartReload(); }//들고있는 무기의 수동 재장전 시작
         if (Input.GetKeyDown(KeyCode.Q))
@@ -67,11 +72,13 @@ public class WeaponHolder : MonoBehaviour
 
     public void Fire()
     {
-        Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
-        Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
-        FireDir.Normalize();
-        FireDir.z = 0;
-        
-        Weapons[Holdindex].Fire(transform.rotation.z, FireDir, Rb, mouseMaxspeed);
+        if (Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Weapons[Holdindex].IsAuto()))
+        {
+            Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
+            Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
+            FireDir.Normalize();
+            FireDir.z = 0;
+            Weapons[Holdindex].Fire(transform.rotation.z, FireDir, Rb, mouseMaxspeed);
+        }
     }
 }

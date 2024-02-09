@@ -11,19 +11,10 @@ public class GunData : ScriptableObject
     public float recoil;
     public float magsize;
     public float fireRate;
+    public bool Automatic;
     public float reloadTime;
     public GameObject bullet;
     public float bulletSpeed;
     [HideInInspector]
     public bool reloading;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

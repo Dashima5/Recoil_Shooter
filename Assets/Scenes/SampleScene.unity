@@ -580,7 +580,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 403726170}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0ab6667eb11b334db8036e660bb15f2, type: 3}
+  m_Script: {fileID: 11500000, guid: 573ffe9e2d59dfd47878b48654ad7228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   gunData: {fileID: 11400000, guid: d6775ea1b06de3541b34292b2a29efe3, type: 2}
@@ -1511,7 +1511,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1294762529}
   - component: {fileID: 1294762531}
-  - component: {fileID: 1294762530}
+  - component: {fileID: 1294762532}
   m_Layer: 0
   m_Name: Valkan
   m_TagString: Untagged
@@ -1534,19 +1534,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 361687793}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1294762530
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1294762528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e344b1835d98fa40b8a8102feb580a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gunData: {fileID: 11400000, guid: 3e55524c90d26654b94f7dae2fb0ad27, type: 2}
 --- !u!212 &1294762531
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1599,6 +1586,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1294762532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294762528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 573ffe9e2d59dfd47878b48654ad7228, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gunData: {fileID: 11400000, guid: 3e55524c90d26654b94f7dae2fb0ad27, type: 2}
 --- !u!1 &1312964723
 GameObject:
   m_ObjectHideFlags: 0
@@ -1841,9 +1841,9 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 1
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 1.5
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1973,6 +1973,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   buttonMaxspeed: 4.9
   buttonMinspeed: 1
+  Diving: 0
   SpeedMag: {fileID: 332851417}
   SpeedX: {fileID: 952180078}
   SpeedY: {fileID: 579551482}
