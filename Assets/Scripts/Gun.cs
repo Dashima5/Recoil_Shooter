@@ -7,20 +7,18 @@ public class Gun : MonoBehaviour
     [SerializeField] protected GunData gunData;
     protected float Ammo;
     protected float TimeSincelastFire;
-    protected bool CanShoot() => !gunData.reloading && TimeSincelastFire > 1f / (gunData.fireRate / 60f) && Ammo >= 1;
-    public void Fire(float rotZ, Vector3 Dir, Rigidbody2D Rb, float Maxspeed) {
-        if (CanShoot())
+    private Vector3 CurrentRecoil;
+    public bool CanShoot() => !gunData.reloading && TimeSincelastFire > 1f / (gunData.fireRate / 60f) && Ammo >= 1;
+    public Vector3 Fire(float rotZ, Vector3 Dir, float Maxspeed) {
+        for (int i = 0; i < gunData.bulletPershot; i++)
         {
-            if (Rb.velocity.y < 0 && Dir.y <0) { Rb.velocity = new Vector3(Rb.velocity.x, 0, 0); }
-            Rb.AddForce(-Dir * gunData.recoil, ForceMode2D.Impulse);
-            if (Rb.velocity.sqrMagnitude > Maxspeed) { Rb.velocity = Maxspeed * -Dir; }
-
+            Vector3 spreadVector = new Vector3(Random.Range(-gunData.spread, gunData.spread), Random.Range(-gunData.spread, gunData.spread), 0);
             GameObject newbullet = Instantiate(gunData.bullet) as GameObject;
-            newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, transform.position, rotZ, Dir);
-
-            Ammo -= 1f;
-            TimeSincelastFire = 0;
+            newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, transform.position, rotZ, Dir+spreadVector);
         }
+        Ammo -= 1f;
+        TimeSincelastFire = 0;
+        return -Dir * gunData.recoil * 5;
     }
 
     private void Start()

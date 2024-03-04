@@ -19,16 +19,46 @@ public class WeaponHolder : MonoBehaviour
     public Text Gunname;
     public Text Ammocount;
 
+    private Vector3 CurrentRecoil;
+
     void Start()
     {
+        Holdindex = 0;
         Player = transform.parent;
         Rb = Player.GetComponent<Rigidbody2D>();
         for(int i = 0; i < transform.childCount && i < 4; i++)
         {
             if(transform.GetChild(i).gameObject.TryGetComponent<Gun>(out var FindingGun)) { Weapons[i] = FindingGun; }
         }
+
+        Gun ActiveWeapon = null;
+        for(int i = 0; i < Weapons.Length; i++)
+        {
+            if (Weapons[i] != null && Weapons[i].gameObject.activeSelf == true)
+            {
+                Weapons[i] = ActiveWeapon;
+                WeaponChange(i);
+            }
+        }
+        if (ActiveWeapon == null) { Weapons[Holdindex].gameObject.SetActive(true); }
     }
 
+    private void WeaponChange(int id)
+    {
+        if (id != Holdindex && Weapons[id] != null)
+        {
+            Weapons[Holdindex].StopReload();//들고있던 무기가 수동 재장전 중이면 재장전 정지
+            Holdindex = id;
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                if (Weapons[i] != null)
+                {
+                    if (i == Holdindex) { Weapons[i].gameObject.SetActive(true); }
+                    else { Weapons[i].gameObject.SetActive(false); }
+                }
+            }
+        }
+    }
 
     void Update()
     {
@@ -46,17 +76,9 @@ public class WeaponHolder : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R)){ Weapons[Holdindex].StartReload(); }//들고있는 무기의 수동 재장전 시작
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            Weapons[Holdindex].StopReload();//들고있던 무기가 수동 재장전 중이면 재장전 정지
-            Holdindex += 1; Holdindex %= Weapons.Length;
-            while (Weapons[Holdindex] == null) { Holdindex += 1; Holdindex %= Weapons.Length; }
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                if (Weapons[i] != null)
-                {
-                    if (i == Holdindex) { Weapons[i].gameObject.SetActive(true); }
-                    else { Weapons[i].gameObject.SetActive(false); }
-                }
-            }
+            int id = Holdindex + 1; id %= Weapons.Length;
+            while (Weapons[id] == null) { id += 1; id %= Weapons.Length; }
+            WeaponChange(id);
         }
 
         for (int i = 0; i < Weapons.Length; i++)
@@ -65,20 +87,24 @@ public class WeaponHolder : MonoBehaviour
             if (Weapons[i] != null && i != Holdindex) {Weapons[i].PassiveReload();}
         }
 
+        CurrentRecoil -= CurrentRecoil * 2f * Time.deltaTime;
+        if (CurrentRecoil.magnitude < 0.3f) { CurrentRecoil = new Vector3(0, 0, 0); }
+
         Gunname.text = Holdindex.ToString();
         Ammocount.text = Weapons[Holdindex].Ammocount();
        
     }
 
-    public void Fire()
+    public Vector3 Fire()
     {
-        if (Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Weapons[Holdindex].IsAuto()))
+        Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
+        Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
+        FireDir.Normalize();
+        FireDir.z = 0;
+        if (Weapons[Holdindex].CanShoot() & (Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Weapons[Holdindex].IsAuto()) ) )
         {
-            Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
-            Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
-            FireDir.Normalize();
-            FireDir.z = 0;
-            Weapons[Holdindex].Fire(transform.rotation.z, FireDir, Rb, mouseMaxspeed);
+            CurrentRecoil = Weapons[Holdindex].Fire(transform.rotation.z, FireDir, mouseMaxspeed);
         }
+        return CurrentRecoil;
     }
 }

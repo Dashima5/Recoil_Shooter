@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b71f83889c6990244aa5f878d1c9b976, type: 3}
-  m_Name: Valkan
+  m_Name: Shotgun
   m_EditorClassIdentifier: 
-  name: Valkan
-  damage: 1.5
-  recoil: 2.5
-  magsize: 50
-  fireRate: 500
-  Automatic: 1
-  reloadTime: 5
+  name: Shotgun
+  damage: 1
+  recoil: 5
+  magsize: 8
+  fireRate: 150
+  Automatic: 0
+  reloadTime: 1.5
   bullet: {fileID: 990272475781579284, guid: 19cb67d81ddad334a9c4a6eedc8ef9bd, type: 3}
-  bulletSpeed: 50
+  bulletSpeed: 20
+  bulletPershot: 5
+  spread: 0.25
   reloading: 0

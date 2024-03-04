@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b71f83889c6990244aa5f878d1c9b976, type: 3}
-  m_Name: pistol
+  m_Name: AR
   m_EditorClassIdentifier: 
-  name: pistol
-  damage: 1
-  recoil: 3
-  magsize: 8
-  fireRate: 300
-  Automatic: 0
-  reloadTime: 2
+  name: AR
+  damage: 1.5
+  recoil: 2
+  magsize: 30
+  fireRate: 500
+  Automatic: 1
+  reloadTime: 3
   bullet: {fileID: 990272475781579284, guid: 19cb67d81ddad334a9c4a6eedc8ef9bd, type: 3}
-  bulletSpeed: 20
+  bulletSpeed: 50
   bulletPershot: 1
   spread: 0
   reloading: 0
