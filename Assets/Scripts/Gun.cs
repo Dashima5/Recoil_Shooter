@@ -7,14 +7,13 @@ public class Gun : MonoBehaviour
     [SerializeField] protected GunData gunData;
     protected float Ammo;
     protected float TimeSincelastFire;
-    private Vector3 CurrentRecoil;
     public bool CanShoot() => !gunData.reloading && TimeSincelastFire > 1f / (gunData.fireRate / 60f) && Ammo >= 1;
     public Vector3 Fire(float rotZ, Vector3 Dir, float Maxspeed) {
         for (int i = 0; i < gunData.bulletPershot; i++)
         {
             Vector3 spreadVector = new Vector3(Random.Range(-gunData.spread, gunData.spread), Random.Range(-gunData.spread, gunData.spread), 0);
             GameObject newbullet = Instantiate(gunData.bullet) as GameObject;
-            newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, transform.position, rotZ, Dir+spreadVector);
+            newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, gunData.range, transform.position, rotZ -90, Dir+spreadVector);
         }
         Ammo -= 1f;
         TimeSincelastFire = 0;

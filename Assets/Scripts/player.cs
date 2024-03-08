@@ -10,9 +10,8 @@ public class Player : MonoBehaviour
     private Vector3 PlayerVelocity;
     private Vector3 RecoilVelocity;
     private WeaponHolder weaponHolder;
-    public float buttonMaxspeed = 4.8f;
-    public float buttonMinspeed = 1f;
-    public bool Diving = false;
+    public float Speed = 5f;
+    public float HP = 10f;
 
     public Text SpeedMag;
     public Text SpeedX;
@@ -26,23 +25,32 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        RecoilVelocity = weaponHolder.Fire();
+        RecoilVelocity -= RecoilVelocity * 2f * Time.deltaTime;
+        if (RecoilVelocity.magnitude < 0.3f) {RecoilVelocity = new Vector3(0, 0, 0); }
+
+        if (Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && weaponHolder.IsAuto()) )
+        {
+           RecoilVelocity = weaponHolder.Fire(RecoilVelocity);
+        }
         Rb.velocity = PlayerVelocity + RecoilVelocity;
 
-        SpeedMag.text = "속도" + Rb.velocity.magnitude.ToString("F2");
+        SpeedMag.text = HP.ToString("F2");
         SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
         SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
+
+        if(HP <= 0) { gameObject.SetActive(false); }
     }
 
     private void FixedUpdate()
     {
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
-        PlayerVelocity = new Vector3(h*5, v*5, 0);
+        PlayerVelocity = new Vector3(h*Speed, v*Speed, 0);
     }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
+        /*
         if (other.transform.CompareTag("Enemy"))
         {
             Enemy e = other.gameObject.GetComponent<Enemy>();
@@ -52,5 +60,11 @@ public class Player : MonoBehaviour
                 Debug.Log("충돌 velocity "+Rb.velocity);
             }
         }
+        */
+    }
+
+    public void hit(float D)
+    {
+        HP -= D;
     }
 }

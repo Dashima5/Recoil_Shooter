@@ -14,9 +14,10 @@ public class Bullet : MonoBehaviour
     private float MaxtravelDis = 25f;
     
 
-    public void Set(float damage, float speed, Vector3 position, float rotZ, Vector3 direction)
+    public void Set(float damage, float speed, float range, Vector3 position, float rotZ, Vector3 direction)
     {
         this.damage = damage;
+        MaxtravelDis = range;
         transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, rotZ));
         GetComponent<Rigidbody2D>().velocity = new Vector3(direction.x, direction.y, 0).normalized * speed;
     }

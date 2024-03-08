@@ -19,8 +19,6 @@ public class WeaponHolder : MonoBehaviour
     public Text Gunname;
     public Text Ammocount;
 
-    private Vector3 CurrentRecoil;
-
     void Start()
     {
         Holdindex = 0;
@@ -86,25 +84,28 @@ public class WeaponHolder : MonoBehaviour
             //무기칸을 서치, 무기가 있지만 들고있는 무기가 아니면 패시브 재장전
             if (Weapons[i] != null && i != Holdindex) {Weapons[i].PassiveReload();}
         }
-
-        CurrentRecoil -= CurrentRecoil * 2f * Time.deltaTime;
-        if (CurrentRecoil.magnitude < 0.3f) { CurrentRecoil = new Vector3(0, 0, 0); }
-
         Gunname.text = Holdindex.ToString();
         Ammocount.text = Weapons[Holdindex].Ammocount();
        
     }
 
-    public Vector3 Fire()
+    public Vector3 Fire(Vector3 RecoilRecieve)
     {
-        Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
-        Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
-        FireDir.Normalize();
-        FireDir.z = 0;
-        if (Weapons[Holdindex].CanShoot() & (Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Weapons[Holdindex].IsAuto()) ) )
+        if (Weapons[Holdindex].CanShoot())
         {
-            CurrentRecoil = Weapons[Holdindex].Fire(transform.rotation.z, FireDir, mouseMaxspeed);
+            Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
+            Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
+            FireDir.Normalize();
+            FireDir.z = 0;
+            RecoilRecieve = Weapons[Holdindex].Fire(transform.rotation.z, FireDir, mouseMaxspeed);
         }
-        return CurrentRecoil;
+        return RecoilRecieve;
     }
+
+    public bool IsAuto()
+    {
+        return Weapons[Holdindex].IsAuto();
+    }
+
+    public bool CanShoot() { return Weapons[Holdindex].CanShoot();}
 }

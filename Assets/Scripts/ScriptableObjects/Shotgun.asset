@@ -15,12 +15,13 @@ MonoBehaviour:
   name: Shotgun
   damage: 1
   recoil: 5
+  range: 30
   magsize: 8
   fireRate: 150
   Automatic: 0
   reloadTime: 1.5
   bullet: {fileID: 990272475781579284, guid: 19cb67d81ddad334a9c4a6eedc8ef9bd, type: 3}
-  bulletSpeed: 20
+  bulletSpeed: 50
   bulletPershot: 5
-  spread: 0.25
+  spread: 0.2
   reloading: 0

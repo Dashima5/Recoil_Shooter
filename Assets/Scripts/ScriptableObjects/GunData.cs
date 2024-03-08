@@ -9,6 +9,7 @@ public class GunData : ScriptableObject
 
     public float damage;
     public float recoil;
+    public float range;
     public float magsize;
     public float fireRate;
     public bool Automatic;
