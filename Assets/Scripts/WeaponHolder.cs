@@ -12,7 +12,6 @@ public class WeaponHolder : MonoBehaviour
     private Vector3 mouseWorldPos;
     private Gun[] Weapons = new Gun[4];
     private int Holdindex = 0;
-    public float mouseMaxspeed = 15f;
     private Vector3 rotate;
     private float rotZ;
 
@@ -85,7 +84,7 @@ public class WeaponHolder : MonoBehaviour
             if (Weapons[i] != null && i != Holdindex) {Weapons[i].PassiveReload();}
         }
         Gunname.text = Holdindex.ToString();
-        Ammocount.text = Weapons[Holdindex].Ammocount();
+        Ammocount.text = Weapons[Holdindex].UIAmmocount();
        
     }
 
@@ -97,7 +96,7 @@ public class WeaponHolder : MonoBehaviour
             Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
             FireDir.Normalize();
             FireDir.z = 0;
-            RecoilRecieve = Weapons[Holdindex].Fire(transform.rotation.z, FireDir, mouseMaxspeed);
+            RecoilRecieve += Weapons[Holdindex].Fire(FireDir, rotZ);
         }
         return RecoilRecieve;
     }

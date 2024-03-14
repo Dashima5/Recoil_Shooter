@@ -8,15 +8,16 @@ using UnityEngine.UIElements;
 public class Bullet : MonoBehaviour
 {
     // Start is called before the first frame update
-    private float damage = 1f;
+    protected float Damage = 1f;
     private Vector3 oldPos;
     private float travelDis = 0;
     private float MaxtravelDis = 25f;
+    public string User;
     
 
     public void Set(float damage, float speed, float range, Vector3 position, float rotZ, Vector3 direction)
     {
-        this.damage = damage;
+        this.Damage = damage;
         MaxtravelDis = range;
         transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, rotZ));
         GetComponent<Rigidbody2D>().velocity = new Vector3(direction.x, direction.y, 0).normalized * speed;
@@ -37,15 +38,24 @@ public class Bullet : MonoBehaviour
         else oldPos = transform.position;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    protected void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.transform.CompareTag("Level")) { Destroy(gameObject); }
-        if(other.transform.CompareTag("Enemy"))
+        if(other.transform.CompareTag("Level")) { Destroy(gameObject); }
+        else if(User == "Player" && other.transform.CompareTag("Enemy"))
         {
             Enemy e = other.gameObject.GetComponent<Enemy>();
             if (e != null)
             {
-                e.hit(damage);
+                e.hit(Damage);
+            }
+            Destroy(gameObject);
+        }
+        else if (User == "Enemy" && other.transform.CompareTag("Player"))
+        {
+            Player p = other.gameObject.GetComponent<Player>();
+            if (p != null)
+            {
+                p.hit(Damage);
             }
             Destroy(gameObject);
         }

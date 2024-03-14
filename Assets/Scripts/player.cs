@@ -10,8 +10,10 @@ public class Player : MonoBehaviour
     private Vector3 PlayerVelocity;
     private Vector3 RecoilVelocity;
     private WeaponHolder weaponHolder;
-    public float Speed = 5f;
-    public float HP = 10f;
+    public float HP;
+    public float Speed;
+    public float MaxRecoil;
+    
 
     public Text SpeedMag;
     public Text SpeedX;
@@ -25,16 +27,20 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        RecoilVelocity -= RecoilVelocity * 2f * Time.deltaTime;
-        if (RecoilVelocity.magnitude < 0.3f) {RecoilVelocity = new Vector3(0, 0, 0); }
+        RecoilVelocity -= RecoilVelocity * 1.5f * Time.deltaTime;
+        if (RecoilVelocity.magnitude < 0.3f) {RecoilVelocity = Vector3.zero; }
 
         if (Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && weaponHolder.IsAuto()) )
         {
            RecoilVelocity = weaponHolder.Fire(RecoilVelocity);
+            if(RecoilVelocity.magnitude >= MaxRecoil)
+            {
+                RecoilVelocity = RecoilVelocity.normalized * MaxRecoil;
+            }
         }
         Rb.velocity = PlayerVelocity + RecoilVelocity;
 
-        SpeedMag.text = HP.ToString("F2");
+        SpeedMag.text = "HP: " + HP.ToString("F2");
         SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
         SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
 
@@ -66,5 +72,11 @@ public class Player : MonoBehaviour
     public void hit(float D)
     {
         HP -= D;
+    }
+
+    public void GetExplosion(float damage, Vector3 ExDirection, float ExPower)
+    {
+        hit(damage / 5);
+        RecoilVelocity += ExDirection * ExPower;
     }
 }
