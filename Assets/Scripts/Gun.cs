@@ -30,6 +30,10 @@ public class Gun : MonoBehaviour
         if (Ammo >= 1) TimeSincelastFire += Time.deltaTime;
         else { TimeSincelastFire = 0f; }
         if (Ammo > gunData.magsize) { Ammo = gunData.magsize; }
+        /*
+        if (gunData.reloading) { transform.rotation = Quaternion.Euler(0, 0, 45); }
+        else transform.rotation = Quaternion.Euler(0, 0, 0);
+        */
     }
 
     public string GetName() { return gunData.name; }

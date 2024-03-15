@@ -16,7 +16,7 @@ MonoBehaviour:
   damage: 1
   recoil: 3
   range: 40
-  magsize: 8
+  magsize: 4
   fireRate: 300
   Automatic: 0
   reloadTime: 2

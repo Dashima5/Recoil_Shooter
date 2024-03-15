@@ -33,7 +33,7 @@ public class WeaponHolder : MonoBehaviour
         {
             if (Weapons[i] != null && Weapons[i].gameObject.activeSelf == true)
             {
-                Weapons[i] = ActiveWeapon;
+                ActiveWeapon = Weapons[i];
                 WeaponChange(i);
             }
         }
@@ -42,19 +42,19 @@ public class WeaponHolder : MonoBehaviour
 
     private void WeaponChange(int id)
     {
-        if (id != Holdindex && Weapons[id] != null)
+
+        if(id != Holdindex) Weapons[Holdindex].StopReload();//들고있던 무기가 수동 재장전 중이면 재장전 정지
+        while (Weapons[id] == null) { id += 1; id %= Weapons.Length; }
+        Holdindex = id;
+        for (int i = 0; i < Weapons.Length; i++)
         {
-            Weapons[Holdindex].StopReload();//들고있던 무기가 수동 재장전 중이면 재장전 정지
-            Holdindex = id;
-            for (int i = 0; i < Weapons.Length; i++)
+            if (Weapons[i] != null)
             {
-                if (Weapons[i] != null)
-                {
-                    if (i == Holdindex) { Weapons[i].gameObject.SetActive(true); }
-                    else { Weapons[i].gameObject.SetActive(false); }
-                }
+                if (i == Holdindex) { Weapons[i].gameObject.SetActive(true); }
+                else { Weapons[i].gameObject.SetActive(false); }
             }
         }
+        
     }
 
     void Update()
@@ -74,7 +74,6 @@ public class WeaponHolder : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             int id = Holdindex + 1; id %= Weapons.Length;
-            while (Weapons[id] == null) { id += 1; id %= Weapons.Length; }
             WeaponChange(id);
         }
 

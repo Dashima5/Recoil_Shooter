@@ -5,10 +5,10 @@ using UnityEngine;
 public class Chaser : Enemy {
     protected override void WakeLogic()
     {
-        Dir.Normalize();
-        float rotZ = Mathf.Atan2(Dir.y, Dir.x) * Mathf.Rad2Deg;
+        PlayerDir.Normalize();
+        float rotZ = Mathf.Atan2(PlayerDir.y, PlayerDir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, rotZ - 90);
-        MoveVelocity = Dir * speed;
+        MoveVelocity = PathDir * speed;
 
         AttackTimer += Time.deltaTime;//최대치를 정해두지 않으면 메모리 누수 일 수도 있지 않을까??
         if (PlayerDis < DamageRange && CanAttack())
@@ -16,5 +16,14 @@ public class Chaser : Enemy {
             Player.GetComponent<Player>().hit(Damage);
             AttackTimer = 0f;
         }
+    }
+
+    protected override void SleepLogic() 
+    {
+        
+    }
+
+    protected override void UpdateLogic()
+    {
     }
 }

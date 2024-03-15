@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public bool Respawn = true;
     public float RespawnTime;
     private float RespwanTimeCurrent = 0f;
     public GameObject TargetPrefab;
@@ -26,7 +27,7 @@ public class Spawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (TargetDestoryed)
+        if (TargetDestoryed && Respawn)
         {
             RespwanTimeCurrent += Time.deltaTime;
             if (RespwanTimeCurrent >= RespawnTime)

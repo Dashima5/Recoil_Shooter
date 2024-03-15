@@ -12,23 +12,43 @@ public class Gunner : Enemy
     }
     protected override void WakeLogic()
     {
-        Dir.Normalize();
-        float rotZ = Mathf.Atan2(Dir.y, Dir.x) * Mathf.Rad2Deg;
+        PlayerDir.Normalize();
+        float rotZ = Mathf.Atan2(PlayerDir.y, PlayerDir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, rotZ);
-        if (PlayerDis < DamageRange)
+        if (Mathf.Abs(rotZ) > 90)
+        {
+            MyGun.Flip(true);
+        }
+        else { MyGun.Flip(false); }
+
+        if (PlayerDis < DamageRange && RayToPlayer.collider == null)
         {
             MoveVelocity = Vector3.zero;
             AttackTimer += Time.deltaTime;
             if (MyGun.CanShoot() && this.CanAttack())
             {
-                RecoilVelocity += MyGun.Fire(Dir, transform.rotation.z);
+                RecoilVelocity += MyGun.Fire(PlayerDir, transform.rotation.z);
+                AttackTimer = 0f;
             }
         }
         else
         {
             AttackTimer = 0f;
-            MoveVelocity = Dir * speed;
+            MoveVelocity = PathDir * speed;
         }
-        
+    }
+
+    protected override void SleepLogic()
+    {
+        MyGun.Flip(false);
+    }
+
+    protected override void UpdateLogic()
+    {
+
+        if (MyGun.Ammocount() <= 0)
+        {
+            MyGun.StartReload();
+        }
     }
 }
