@@ -6,6 +6,7 @@ public class Explosive : Bullet
 {
     public float ExPower;
     public float ExRange;
+    public float PlayerProtection;
     private void OnDestroy()
     {
         Collider2D[] colls = Physics2D.OverlapCircleAll(transform.position, ExRange);
@@ -15,22 +16,24 @@ public class Explosive : Bullet
             if (colls[i].transform.CompareTag("Player"))
             {
                 Player p = colls[i].gameObject.GetComponent<Player>();
-                Vector3 ExDirection = transform.position - colls[i].gameObject.transform.position;
+                Vector3 ExDirection = colls[i].gameObject.transform.position - transform.position;
                 ExDirection.Normalize();
                 if (p != null)
                 {
-                    p.GetExplosion(Damage, -ExDirection, ExPower);
+                    p.Hit(Damage/PlayerProtection);
+                    p.KnockBack(ExDirection, ExPower);
                 }
             }
 
             else if (colls[i].transform.CompareTag("Enemy"))
             {
                 Enemy e = colls[i].gameObject.GetComponent<Enemy>();
-                Vector3 ExDirection = transform.position - colls[i].gameObject.transform.position;
+                Vector3 ExDirection = colls[i].gameObject.transform.position - transform.position;
                 ExDirection.Normalize();
                 if (e != null)
                 {
-                    e.GetExplosion(Damage*3, -ExDirection, ExPower);
+                    e.Hit(Damage);
+                    e.KnockBack(ExDirection, ExPower);
                 }
             }
         }

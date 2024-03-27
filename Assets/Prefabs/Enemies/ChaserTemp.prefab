@@ -117,7 +117,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -162,13 +162,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47556e3c897c22c438d06497452b7e17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 5
+  MaxHP: 5
+  MoveSpeed: 6
   Damage: 1
   AttackRate: 150
-  speed: 5
   WaypointDistance: 0.5
   SearchRange: 10
-  Persistance: 1
+  ChasePersistance: 1
+  AlertPersistance: 3
   DamageRange: 1
 --- !u!114 &2280500802954979328
 MonoBehaviour:

@@ -63,4 +63,10 @@ public class Gun : MonoBehaviour
     public void Flip(bool Flipbool) {
         GetComponent<SpriteRenderer>().flipY = Flipbool;
     }
+
+    public void SetDamage(float inputD)
+    {
+        gunData.damage = inputD;
+    }
+
 }

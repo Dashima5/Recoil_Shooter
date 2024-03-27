@@ -3,27 +3,25 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Chaser : Enemy {
-    protected override void WakeLogic()
+    protected override void ChaseLogic()
     {
-        PlayerDir.Normalize();
-        float rotZ = Mathf.Atan2(PlayerDir.y, PlayerDir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rotZ - 90);
-        MoveVelocity = PathDir * speed;
+        MoveVelocity = PathDir * MoveSpeed;
 
-        AttackTimer += Time.deltaTime;//최대치를 정해두지 않으면 메모리 누수 일 수도 있지 않을까??
-        if (PlayerDis < DamageRange && CanAttack())
-        {
-            Player.GetComponent<Player>().hit(Damage);
+        
+        if (playerDis < DamageRange && CanAttack())
+        { 
+            player.GetComponent<Player>().Hit(Damage);
+            player.GetComponent<Player>().KnockBack(playerDir, 15f);
             AttackTimer = 0f;
         }
     }
 
-    protected override void SleepLogic() 
+    protected override void IdleLogic() 
     {
         
     }
 
-    protected override void UpdateLogic()
+    protected override void UpdateLogic2()
     {
     }
 }

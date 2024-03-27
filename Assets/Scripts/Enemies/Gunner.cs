@@ -9,46 +9,43 @@ public class Gunner : Enemy
     {
         base.Start();
         MyGun = transform.GetChild(0).gameObject.GetComponent<Gun>();//0번째 자식를 총으로 읽으므로 다른 자식을 추가할 때 주의
+        MyGun.SetDamage(this.Damage);
     }
-    protected override void WakeLogic()
-    {
-        PlayerDir.Normalize();
-        float rotZ = Mathf.Atan2(PlayerDir.y, PlayerDir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, rotZ);
-        if (Mathf.Abs(rotZ) > 90)
-        {
-            MyGun.Flip(true);
-        }
-        else { MyGun.Flip(false); }
-
-        if (PlayerDis < DamageRange && RayToPlayer.collider == null)
+    protected override void ChaseLogic()
+    { 
+        if (playerDis < DamageRange && RayToPlayer.collider == null)
         {
             MoveVelocity = Vector3.zero;
             AttackTimer += Time.deltaTime;
             if (MyGun.CanShoot() && this.CanAttack())
             {
-                RecoilVelocity += MyGun.Fire(PlayerDir, transform.rotation.z);
+                RecoilVelocity = MyGun.Fire(playerDir, rotZ);
                 AttackTimer = 0f;
             }
         }
         else
         {
             AttackTimer = 0f;
-            MoveVelocity = PathDir * speed;
+            MoveVelocity = PathDir * MoveSpeed;
         }
     }
 
-    protected override void SleepLogic()
+    protected override void IdleLogic()
     {
-        MyGun.Flip(false);
     }
 
-    protected override void UpdateLogic()
+    protected override void UpdateLogic2()
     {
 
         if (MyGun.Ammocount() <= 0)
         {
             MyGun.StartReload();
         }
+
+        if (Mathf.Abs(rotZ) > 90)
+        {
+            MyGun.Flip(true);
+        }
+        else { MyGun.Flip(false); }
     }
 }

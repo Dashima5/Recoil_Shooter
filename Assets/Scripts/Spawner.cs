@@ -1,3 +1,4 @@
+using Pathfinding;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,7 +15,9 @@ public class Spawner : MonoBehaviour
     private Enemy TargetCode;
     private bool TargetDestoryed = true;
     private Transform TargetParent;
-    // Start is called before the first frame update
+
+    public GameObject PatrolPoint1 = null;
+    public GameObject PatrolPoint2 = null;
     void Start()
     {
         TargetParent = GameObject.Find("Enemies").transform;
@@ -22,6 +25,7 @@ public class Spawner : MonoBehaviour
         TargetCode = Target.GetComponent<Enemy>();
         if(Target != null) { TargetDestoryed = false; }
         TargetCode.Respawn(gameObject);
+        TargetCode.SetPatrol(gameObject, PatrolPoint1, PatrolPoint2);
     }
 
     // Update is called once per frame
@@ -36,6 +40,7 @@ public class Spawner : MonoBehaviour
                 TargetCode = Target.GetComponent<Enemy>();
                 if (Target != null) { TargetDestoryed = false; }
                 TargetCode.Respawn(gameObject);
+                TargetCode.SetPatrol(gameObject, PatrolPoint1, PatrolPoint2);
                 RespwanTimeCurrent = 0f;
             }
         }

@@ -8,9 +8,8 @@ using UnityEngine.UI;
 public class WeaponHolder : MonoBehaviour
 {
     private Transform Player;
-    private Rigidbody2D Rb;
     private Vector3 mouseWorldPos;
-    private Gun[] Weapons = new Gun[4];
+    private Gun[] Guns = new Gun[4];
     private int Holdindex = 0;
     private Vector3 rotate;
     private float rotZ;
@@ -22,36 +21,35 @@ public class WeaponHolder : MonoBehaviour
     {
         Holdindex = 0;
         Player = transform.parent;
-        Rb = Player.GetComponent<Rigidbody2D>();
         for(int i = 0; i < transform.childCount && i < 4; i++)
         {
-            if(transform.GetChild(i).gameObject.TryGetComponent<Gun>(out var FindingGun)) { Weapons[i] = FindingGun; }
+            if(transform.GetChild(i+1).gameObject.TryGetComponent<Gun>(out var FindingGun)) { Guns[i] = FindingGun; }
         }
 
         Gun ActiveWeapon = null;
-        for(int i = 0; i < Weapons.Length; i++)
+        for(int i = 0; i < Guns.Length; i++)
         {
-            if (Weapons[i] != null && Weapons[i].gameObject.activeSelf == true)
+            if (Guns[i] != null && Guns[i].gameObject.activeSelf == true)
             {
-                ActiveWeapon = Weapons[i];
-                WeaponChange(i);
+                ActiveWeapon = Guns[i];
+                GunChange(i);
             }
         }
-        if (ActiveWeapon == null) { Weapons[Holdindex].gameObject.SetActive(true); }
+        if (ActiveWeapon == null) { Guns[Holdindex].gameObject.SetActive(true); }
     }
 
-    private void WeaponChange(int id)
+    private void GunChange(int id)
     {
 
-        if(id != Holdindex) Weapons[Holdindex].StopReload();//들고있던 무기가 수동 재장전 중이면 재장전 정지
-        while (Weapons[id] == null) { id += 1; id %= Weapons.Length; }
+        if(id != Holdindex) Guns[Holdindex].StopReload();//들고있던 무기가 수동 재장전 중이면 재장전 정지
+        while (Guns[id] == null) { id += 1; id %= Guns.Length; }
         Holdindex = id;
-        for (int i = 0; i < Weapons.Length; i++)
+        for (int i = 0; i < Guns.Length; i++)
         {
-            if (Weapons[i] != null)
+            if (Guns[i] != null)
             {
-                if (i == Holdindex) { Weapons[i].gameObject.SetActive(true); }
-                else { Weapons[i].gameObject.SetActive(false); }
+                if (i == Holdindex) { Guns[i].gameObject.SetActive(true); }
+                else { Guns[i].gameObject.SetActive(false); }
             }
         }
         
@@ -66,44 +64,44 @@ public class WeaponHolder : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, rotZ);
         if (Mathf.Abs(rotZ) > 90) 
         {
-            Weapons[Holdindex].Flip(true);
+            Guns[Holdindex].Flip(true);
         }
-        else { Weapons[Holdindex].Flip(false); }
+        else { Guns[Holdindex].Flip(false); }
 
-        if (Input.GetKeyDown(KeyCode.R)){ Weapons[Holdindex].StartReload(); }//들고있는 무기의 수동 재장전 시작
+        if (Input.GetKeyDown(KeyCode.R)){ Guns[Holdindex].StartReload(); }//들고있는 무기의 수동 재장전 시작
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            int id = Holdindex + 1; id %= Weapons.Length;
-            WeaponChange(id);
+            int id = Holdindex + 1; id %= Guns.Length;
+            GunChange(id);
         }
 
-        for (int i = 0; i < Weapons.Length; i++)
+        for (int i = 0; i < Guns.Length; i++)
         {
             //무기칸을 서치, 무기가 있지만 들고있는 무기가 아니면 패시브 재장전
-            if (Weapons[i] != null && i != Holdindex) {Weapons[i].PassiveReload();}
+            if (Guns[i] != null && i != Holdindex) {Guns[i].PassiveReload();}
         }
         Gunname.text = Holdindex.ToString();
-        Ammocount.text = Weapons[Holdindex].UIAmmocount();
+        Ammocount.text = Guns[Holdindex].UIAmmocount();
        
     }
 
     public Vector3 Fire(Vector3 RecoilRecieve)
     {
-        if (Weapons[Holdindex].CanShoot())
+        if (Guns[Holdindex].CanShoot())
         {
             Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(Player.position);
             Vector3 FireDir = (Vector3)(Input.mousePosition - PlayerScreenPos);
             FireDir.Normalize();
             FireDir.z = 0;
-            RecoilRecieve += Weapons[Holdindex].Fire(FireDir, rotZ);
+            RecoilRecieve = Guns[Holdindex].Fire(FireDir, rotZ);
         }
         return RecoilRecieve;
     }
 
     public bool IsAuto()
     {
-        return Weapons[Holdindex].IsAuto();
+        return Guns[Holdindex].IsAuto();
     }
 
-    public bool CanShoot() { return Weapons[Holdindex].CanShoot();}
+    public bool CanShoot() { return Guns[Holdindex].CanShoot();}
 }
