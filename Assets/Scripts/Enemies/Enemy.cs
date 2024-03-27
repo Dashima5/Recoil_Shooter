@@ -27,6 +27,7 @@ public abstract class Enemy : Character
     public float AlertPersistance;
     public float DamageRange;
     protected float OutRangeTimer = 0f;
+    public float TurnSpeed;
 
     protected GameObject player;
     protected Vector3 playerDir = Vector3.zero;
@@ -111,13 +112,12 @@ public abstract class Enemy : Character
                         PathTarget = PatrolPoints[Patrolindex];
                         if (Vector3.Distance(transform.position, PathTarget) <= WaypointDistance * 2)
                         {
-                            transform.rotation = Quaternion.Euler(0, 0, 0);
+                            rotZ = 0f;
                             MoveVelocity = Vector3.zero;
                         }
                         else
                         {
                             rotZ = Mathf.Atan2(PathDir.y, PathDir.x) * Mathf.Rad2Deg;
-                            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), 100f * Time.deltaTime);
                             MoveVelocity = PathDir * MoveSpeed / 2;
                         }
                         break;
@@ -129,8 +129,6 @@ public abstract class Enemy : Character
                         }
                         PathTarget = PatrolPoints[Patrolindex];
                         rotZ = Mathf.Atan2(PathDir.y, PathDir.x) * Mathf.Rad2Deg;
-                        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), 100f * Time.deltaTime);
-                        //transform.rotation = Quaternion.Euler(0, 0, rotZ);
                         MoveVelocity = PathDir * MoveSpeed / 2;
                         break;
 
@@ -150,9 +148,8 @@ public abstract class Enemy : Character
                 PathTarget = player.transform.position;
                 playerDir.Normalize();
                 rotZ = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0, 0, rotZ);
 
-                AttackTimer += Time.deltaTime;
+                if(!CanAttack()) AttackTimer += Time.deltaTime;
 
                 ChaseAction();
 
@@ -176,11 +173,12 @@ public abstract class Enemy : Character
                 }
                 break;
         }
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), TurnSpeed * Time.deltaTime);
     }
 
     private void FixedUpdate()
     {
-        if (player != null) PathTarget = player.transform.position;
         if (path == null) return;
         if (currentWaypoint >= path.vectorPath.Count) { PathEnded = true; return; }
         else { PathEnded = false; }

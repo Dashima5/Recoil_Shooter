@@ -5,6 +5,7 @@ using UnityEngine;
 public class Gunner : Enemy
 {
     private Gun MyGun;
+    protected new bool CanAttack() => AttackTimer >= 1f / (AttackRate / 60f) && MyGun.CanShoot();
     new protected void Start()
     {
         base.Start();
@@ -17,7 +18,7 @@ public class Gunner : Enemy
         {
             MoveVelocity = Vector3.zero;
             AttackTimer += Time.deltaTime;
-            if (MyGun.CanShoot() && this.CanAttack())
+            if (CanAttack())
             {
                 RecoilVelocity = MyGun.Fire(playerDir, rotZ);
                 AttackTimer = 0f;

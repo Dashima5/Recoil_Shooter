@@ -171,6 +171,7 @@ MonoBehaviour:
   ChasePersistance: 1
   AlertPersistance: 3
   DamageRange: 1
+  TurnSpeed: 200
 --- !u!114 &2280500802954979328
 MonoBehaviour:
   m_ObjectHideFlags: 0

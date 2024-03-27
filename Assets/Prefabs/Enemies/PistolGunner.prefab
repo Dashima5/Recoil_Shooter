@@ -208,6 +208,7 @@ MonoBehaviour:
   ChasePersistance: 1
   AlertPersistance: 3
   DamageRange: 10
+  TurnSpeed: 200
 --- !u!50 &8716295871102932539
 Rigidbody2D:
   serializedVersion: 4
