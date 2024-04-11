@@ -5,9 +5,10 @@ using UnityEngine;
 public class Gun : MonoBehaviour
 {
     [SerializeField] protected GunData gunData;
-    protected float Ammo;
-    protected float TimeSincelastFire;
-    public bool CanShoot() => !gunData.reloading && TimeSincelastFire > 1f / (gunData.fireRate / 60f) && Ammo >= 1;
+    protected bool Reloading = false;
+    protected float Ammo = 1f;
+    protected float TimeSincelastFire = 0f;
+    protected bool CanShoot() => !Reloading && TimeSincelastFire > 1f / (gunData.fireRate / 60f) && Ammo >= 1;
     public Vector3 Fire(Vector3 Dir, float rotZ) {
         for (int i = 0; i < gunData.bulletPershot; i++)
         {
@@ -30,31 +31,36 @@ public class Gun : MonoBehaviour
         if (Ammo >= 1) TimeSincelastFire += Time.deltaTime;
         else { TimeSincelastFire = 0f; }
         if (Ammo > gunData.magsize) { Ammo = gunData.magsize; }
-        /*
-        if (gunData.reloading) { transform.rotation = Quaternion.Euler(0, 0, 45); }
-        else transform.rotation = Quaternion.Euler(0, 0, 0);
-        */
     }
 
     public string GetName() { return gunData.name; }
-    public void PassiveReload() { if (Ammo < gunData.magsize) Ammo += gunData.reloadTime * Time.deltaTime / 4; }
+    public void PassiveReload() 
+    {
+        if (Ammo < gunData.magsize)
+        {
+            Ammo += gunData.magsize * Time.deltaTime / (gunData.magsize * 2);
+
+        }
+        else Ammo = gunData.magsize;
+    }
 
     private IEnumerator Reload() {
-        gunData.reloading = true;
+        Reloading = true;
         yield return new WaitForSeconds(gunData.reloadTime);
         Ammo = gunData.magsize;
-        gunData.reloading = false;
+        Reloading = false;
+        Debug.Log("Reload Complete!");
     }
     public void StartReload()
     {
-        if (!gunData.reloading) { StartCoroutine(Reload());}
+        if (!Reloading) { StartCoroutine(Reload());}
     }
     public void StopReload()
     {
-        if (gunData.reloading) { StopCoroutine(Reload()); gunData.reloading = false; }
+        if (Reloading) { StopCoroutine(Reload()); Reloading = false; }
     }
     public string UIAmmocount() {
-        if (gunData.reloading) return "Reloading";
+        if (Reloading) return "Reloading";
         else return Ammo.ToString("F2");
     }
     public float Ammocount() { return Ammo; }
@@ -64,9 +70,18 @@ public class Gun : MonoBehaviour
         GetComponent<SpriteRenderer>().flipY = Flipbool;
     }
 
+    
     public void SetDamage(float inputD)
     {
         gunData.damage = inputD;
     }
+    public bool GetCanShoot()
+    {
+        return CanShoot();
+    }
 
+    public bool GetReloading()
+    {
+        return Reloading;
+    }
 }

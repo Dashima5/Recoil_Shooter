@@ -5,12 +5,6 @@ using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public enum BulletTarget
-{
-    Player,
-    Enemy,
-    Any,
-}
 public class Bullet : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -18,7 +12,7 @@ public class Bullet : MonoBehaviour
     private Vector3 oldPos;
     private float travelDis = 0;
     private float MaxtravelDis = 25f;
-    public BulletTarget target;
+    public string target = "Enemy";
     
 
     public void Set(float damage, float speed, float range, Vector3 position, float rotZ, Vector3 direction)
@@ -44,24 +38,15 @@ public class Bullet : MonoBehaviour
         else oldPos = transform.position;
     }
 
-    protected void OnTriggerEnter2D(Collider2D other)
+    protected void OnTriggerEnter2D(Collider2D col)
     {
-        if(other.transform.CompareTag("Level")) { Destroy(gameObject); }
-        else if(target == BulletTarget.Enemy && other.transform.CompareTag("Enemy"))
+        if(col.transform.CompareTag("Level")) { Destroy(gameObject); }
+        else if(col.transform.CompareTag(target))
         {
-            Enemy e = other.gameObject.GetComponent<Enemy>();
-            if (e != null)
+            Character c = col.gameObject.GetComponent<Character>();
+            if (c != null)
             {
-                e.Hit(Damage);
-            }
-            Destroy(gameObject);
-        }
-        else if (target == BulletTarget.Player && other.transform.CompareTag("Player"))
-        {
-            Player p = other.gameObject.GetComponent<Player>();
-            if (p != null)
-            {
-                p.Hit(Damage);
+                c.Hit(Damage);
             }
             Destroy(gameObject);
         }

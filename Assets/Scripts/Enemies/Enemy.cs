@@ -33,7 +33,6 @@ public abstract class Enemy : Character
     protected Vector3 playerDir = Vector3.zero;
     protected float playerDis;
     protected RaycastHit2D RayToPlayer;
-    protected float rotZ = 0f;
 
     private Spawner MySpawner;
 
@@ -149,8 +148,6 @@ public abstract class Enemy : Character
                 playerDir.Normalize();
                 rotZ = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg;
 
-                if(!CanAttack()) AttackTimer += Time.deltaTime;
-
                 ChaseAction();
 
                 if (playerDis > SearchRange && RayToPlayer.collider != null) { OutRangeTimer += Time.deltaTime; }
@@ -223,7 +220,7 @@ public abstract class Enemy : Character
             if (p != null)
             {
                 p.Hit(Damage);
-                p.KnockBack(playerDir, 5f);
+                p.SetRecoil(playerDir, 5f);
                 AttackTimer = 0f;
             }
         }

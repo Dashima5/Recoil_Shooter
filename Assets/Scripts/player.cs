@@ -3,53 +3,131 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class Player : Character
 {
-    private WeaponHolder weaponHolder;
+    private Transform Top;
+    private Melee MyMelee = null;
+    private Transform GunSlot;
+    private Gun[] Guns = new Gun[4];
+    private int Holdindex = 0;
+
+    private PlayerFoot Foot;
+    //private float FootRotZ = 0f;
 
     public Text SpeedMag;
     public Text SpeedX;
     public Text SpeedY;
+    public Text Gunname;
+    public Text Ammocount;
 
     new void Start()
     {
         base.Start();
-        Rb = GetComponent<Rigidbody2D>();
-        weaponHolder = transform.Find("weaponHolder").gameObject.GetComponent<WeaponHolder>();
+        Top = transform.Find("Top");
+        if(Top.Find("MeleeSlot").GetChild(0).TryGetComponent<Melee>(out var FindingMelee))
+        {
+            MyMelee = FindingMelee;
+        }
+        GunSlot = Top.Find("GunSlot");
+        for (int i = 0; i < GunSlot.childCount && i < 4; i++)
+        {
+            if (GunSlot.GetChild(i).gameObject.TryGetComponent<Gun>(out var FindingGun)) { Guns[i] = FindingGun; }
+        }
+
+        Gun ActiveWeapon = null;
+        for (int i = 0; i < Guns.Length; i++)
+        {
+            if (Guns[i] != null && Guns[i].gameObject.activeSelf == true)
+            {
+                ActiveWeapon = Guns[i];
+                GunChange(i);
+            }
+        }
+        if (ActiveWeapon == null) { Guns[Holdindex].gameObject.SetActive(true); }
+
+        Foot = transform.Find("Foot").GetComponent<PlayerFoot>();
     }
 
     protected override void UpdateLogic()
     {
-        if (Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && weaponHolder.IsAuto()))
+        Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 rotate = mouseWorldPos - transform.position;
+        rotZ = Mathf.Atan2(rotate.y, rotate.x) * Mathf.Rad2Deg;
+        Top.rotation = Quaternion.Euler(0, 0, rotZ);
+        if (Mathf.Abs(rotZ) > 90)
         {
-            RecoilVelocity = weaponHolder.Fire(RecoilVelocity);
+            Guns[Holdindex].Flip(true);
+        }
+        else { Guns[Holdindex].Flip(false); }
+
+        if ((Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Guns[Holdindex].IsAuto()))
+            && Guns[Holdindex].GetCanShoot())
+        {
+            Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+            Vector3 FireDir = Input.mousePosition - PlayerScreenPos;
+            FireDir.Normalize();
+            FireDir.z = 0;
+            RecoilVelocity = Guns[Holdindex].Fire(FireDir, rotZ);
+        }
+
+        if(Input.GetMouseButtonDown(1) && MyMelee != null)
+        {
+            MyMelee.StartCharge();
+        }
+
+        if (Input.GetMouseButtonUp(1) && MyMelee != null)
+        {
+            Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+            Vector3 FireDir = Input.mousePosition - PlayerScreenPos;
+            FireDir.Normalize();
+            FireDir.z = 0;
+            RecoilVelocity = MyMelee.DoAttack(FireDir, RecoilVelocity);
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) { Guns[Holdindex].StartReload(); }//들고있는 무기의 수동 재장전 시작
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            int id = Holdindex + 1; id %= Guns.Length;
+            GunChange(id);
+        }
+
+        for (int i = 0; i < Guns.Length; i++)
+        {
+             Guns[i].PassiveReload();
         }
 
         SpeedMag.text = "HP: " + HP.ToString("F2");
         SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
         SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
+        Gunname.text = Holdindex.ToString();
+        Ammocount.text = Guns[Holdindex].UIAmmocount();
     }
     private void FixedUpdate()
     {
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         MoveVelocity = new Vector3(h * MoveSpeed, v * MoveSpeed, 0);
+        Foot.Set(MoveVelocity);
+
     }
 
-    /*
-    private void OnCollisionEnter2D(Collision2D other)
+    private void GunChange(int id)
     {
-        if (other.transform.CompareTag("Enemy"))
+
+        if (id != Holdindex) Guns[Holdindex].StopReload();//들고있던 무기가 수동 재장전 중이면 재장전 정지
+        while (Guns[id] == null) { id += 1; id %= Guns.Length; }
+        Holdindex = id;
+        for (int i = 0; i < Guns.Length; i++)
         {
-            Enemy e = other.gameObject.GetComponent<Enemy>();
-            if (e != null)
+            if (Guns[i] != null)
             {
-                e.hit(Mathf.Floor((Mathf.Abs(Rb.velocity.x)/20f + Mathf.Abs(Rb.velocity.y)/20f)*10f)/10f);
-                Debug.Log("충돌 velocity "+Rb.velocity);
+                if (i == Holdindex) { Guns[i].gameObject.SetActive(true); }
+                else { Guns[i].gameObject.SetActive(false); }
             }
         }
-        
+
     }
-    */
+
 }

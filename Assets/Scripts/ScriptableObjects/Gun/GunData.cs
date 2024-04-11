@@ -18,6 +18,4 @@ public class GunData : ScriptableObject
     public float bulletSpeed;
     public int bulletPershot;
     public float spread;
-    [HideInInspector]
-    public bool reloading;
 }

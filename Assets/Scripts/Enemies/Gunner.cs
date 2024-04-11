@@ -5,20 +5,19 @@ using UnityEngine;
 public class Gunner : Enemy
 {
     private Gun MyGun;
-    protected new bool CanAttack() => AttackTimer >= 1f / (AttackRate / 60f) && MyGun.CanShoot();
     new protected void Start()
     {
         base.Start();
-        MyGun = transform.GetChild(0).gameObject.GetComponent<Gun>();//0번째 자식를 총으로 읽으므로 다른 자식을 추가할 때 주의
+        MyGun = GetComponentInChildren<Gun>();
         MyGun.SetDamage(this.Damage);
     }
     protected override void ChaseLogic()
     { 
-        if (playerDis < DamageRange && RayToPlayer.collider == null)
+        if (playerDis < DamageRange && RayToPlayer.collider == null && MyGun != null)
         {
             MoveVelocity = Vector3.zero;
             AttackTimer += Time.deltaTime;
-            if (CanAttack())
+            if (CanAttack() && MyGun.GetCanShoot())
             {
                 RecoilVelocity = MyGun.Fire(playerDir, rotZ);
                 AttackTimer = 0f;
@@ -38,9 +37,10 @@ public class Gunner : Enemy
     protected override void UpdateLogic2()
     {
 
-        if (MyGun.Ammocount() <= 0)
+        if (MyGun.Ammocount() < 1)
         {
             MyGun.StartReload();
+            Debug.Log("Gunner out of ammo. Reloading...");
         }
 
         if (Mathf.Abs(rotZ) > 90)

@@ -21,7 +21,7 @@ public class Explosive : Bullet
                 if (p != null)
                 {
                     p.Hit(Damage/PlayerProtection);
-                    p.KnockBack(ExDirection, ExPower);
+                    p.SetRecoil(ExDirection, ExPower);
                 }
             }
 
@@ -33,7 +33,7 @@ public class Explosive : Bullet
                 if (e != null)
                 {
                     e.Hit(Damage);
-                    e.KnockBack(ExDirection, ExPower);
+                    e.SetRecoil(ExDirection, ExPower);
                 }
             }
         }

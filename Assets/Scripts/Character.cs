@@ -15,6 +15,9 @@ public abstract class Character : MonoBehaviour
     public float MaxHP;
     protected float HP;
     public float MoveSpeed;
+    //public float MaxRecoil;
+
+    protected float rotZ = 0f;
 
     protected void Start()
     {
@@ -34,6 +37,7 @@ public abstract class Character : MonoBehaviour
 
         UpdateAction();
 
+
         Rb.velocity = MoveVelocity + RecoilVelocity;
 
     }
@@ -43,7 +47,7 @@ public abstract class Character : MonoBehaviour
         HP -= D;
     }
 
-    public void KnockBack(Vector3 KBdirection, float KBpower)
+    public void SetRecoil(Vector3 KBdirection, float KBpower)
     {
         KBdirection.Normalize();
         RecoilVelocity = KBdirection * KBpower;
@@ -53,5 +57,10 @@ public abstract class Character : MonoBehaviour
     {
         if (HP + h >= MaxHP) { HP = MaxHP; }
         else { HP += h; }
+    }
+
+    public void Teleport(Vector3 TP)
+    {
+        transform.position = TP;
     }
 }

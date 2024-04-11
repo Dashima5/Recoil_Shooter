@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 192c0b8f17a334d43b659ad5662137df, type: 3}
+  m_Name: SimpleSword
+  m_EditorClassIdentifier: 
+  name: SimpleSword
+  damage: 1
+  dash: 10
+  knockback: 10
+  attackRate: 100
+  attackProlong: 25
+  ChargeTime: 1
+  UserType: Player
+  target: Enemy

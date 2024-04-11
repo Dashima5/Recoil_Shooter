@@ -161,4 +161,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0f3fe2d4abc46c4388634c64d54e873, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  User: Enemy
+  target: Player

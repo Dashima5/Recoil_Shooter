@@ -6,12 +6,12 @@ public class Chaser : Enemy {
     protected override void ChaseLogic()
     {
         MoveVelocity = PathDir * MoveSpeed;
+        if (!CanAttack()) AttackTimer += Time.deltaTime;
 
-        
         if (playerDis < DamageRange && CanAttack())
         { 
             player.GetComponent<Player>().Hit(Damage);
-            player.GetComponent<Player>().KnockBack(playerDir, 15f);
+            player.GetComponent<Player>().SetRecoil(playerDir, 15f);
             AttackTimer = 0f;
         }
     }
