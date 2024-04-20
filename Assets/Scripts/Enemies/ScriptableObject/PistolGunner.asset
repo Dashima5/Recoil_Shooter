@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ace1425919121b4bba2808b5e900d56, type: 3}
+  m_Name: PistolGunner
+  m_EditorClassIdentifier: 
+  name: PistolGunner
+  MaxHp: 4
+  MoveSpeed: 4
+  AttackDecideTime: 2
+  MeleeRange: 3
+  MeleeNormalCharge: 0.5
+  GunRange: 10
+  GunAimTime: 1.25
+  ChaseType: 1
+  Size: 0.5
+  SearchRange: 20
+  ChasePersistance: 1
+  GuardPersistance: 2
+  TurnSpeed: 200

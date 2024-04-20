@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 192c0b8f17a334d43b659ad5662137df, type: 3}
-  m_Name: E_MeleeTemp
+  m_Name: Katana
   m_EditorClassIdentifier: 
-  name: EnemyMeleeTemp
+  name: Katana
   damage: 1
-  dash: 2.5
-  knockback: 5
-  attackRate: 0
-  attackProlong: 0
-  braceTime: 0
-  UserType: Enemy
-  target: Player
+  dash: 10
+  knockback: 10
+  attackRate: 100
+  attackProlong: 25
+  ChargeTime: 1
+  UserType: Player
+  target: Enemy

@@ -1611,7 +1611,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mydata: {fileID: 11400000, guid: c044e9452e49baf40ad93a604b104da0, type: 2}
-  HitboxDebug: 1
 --- !u!1 &952180076
 GameObject:
   m_ObjectHideFlags: 0

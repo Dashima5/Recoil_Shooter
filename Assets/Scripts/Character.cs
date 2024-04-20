@@ -12,12 +12,14 @@ public abstract class Character : MonoBehaviour
     protected Action UpdateAction;
     abstract protected void UpdateLogic();
 
-    public float MaxHP;
+    public float MaxHP = 1f;
     protected float HP;
-    public float MoveSpeed;
+    public float MoveSpeed = 1f;
     //public float MaxRecoil;
 
     protected float rotZ = 0f;
+
+    protected float Stun = 0f;
 
     protected void Start()
     {
@@ -35,7 +37,13 @@ public abstract class Character : MonoBehaviour
         RecoilVelocity -= RecoilVelocity * 2f * Time.deltaTime;
         if (RecoilVelocity.magnitude < 0.3f) { RecoilVelocity = Vector3.zero;}
 
-        UpdateAction();
+        if (Stun <= 0) { UpdateAction(); }
+        else 
+        {
+            Stun -= Time.deltaTime;
+            MoveVelocity = Vector3.zero;
+            WhenStun(); 
+        }
 
 
         Rb.velocity = MoveVelocity + RecoilVelocity;
@@ -52,6 +60,10 @@ public abstract class Character : MonoBehaviour
         KBdirection.Normalize();
         RecoilVelocity = KBdirection * KBpower;
     }
+
+    public Vector3 GetRecoil() { return RecoilVelocity; }
+    public void GetStun(float HowMuch) { Stun += HowMuch; }
+    abstract protected void WhenStun();
 
     public void Heal(float h)
     {

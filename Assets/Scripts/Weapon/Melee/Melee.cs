@@ -20,7 +20,6 @@ public abstract class Melee : MonoBehaviour
     protected float RecoverTime = 0f;
     protected SpriteRenderer sprite;
     protected HitBox hitbox;
-    public bool HitboxDebug = true;
 
     protected Character User;
 
@@ -83,7 +82,6 @@ public abstract class Melee : MonoBehaviour
         }
     }
 
-
     public void StartCharge()
     {
         if (state == MeleeState.Ready)
@@ -120,4 +118,15 @@ public abstract class Melee : MonoBehaviour
 
     abstract protected Vector3 SkilStart(Vector3 AttackDir);
     abstract protected void SkilUpdate();
+
+    public void CancelCharge()
+    {
+        if (state == MeleeState.Charge)
+        {
+            state = MeleeState.Unable;
+            Timer = 0f;
+        }
+    }
+
+    public MeleeState GetState() { return state; }
 }

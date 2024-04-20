@@ -130,4 +130,9 @@ public class Player : Character
 
     }
 
+    protected override void WhenStun()
+    {
+        if (Guns[Holdindex] != null) { Guns[Holdindex].StopReload(); }
+        if(MyMelee != null) { MyMelee.CancelCharge(); }
+    }
 }

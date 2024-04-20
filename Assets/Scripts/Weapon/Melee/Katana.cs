@@ -6,8 +6,8 @@ public class Katana : Melee
 {
     override protected Vector3 SkilStart(Vector3 AttackDir)
     {
-        Vector3 TpPos = User.transform.position + AttackDir*10f;
-        RaycastHit2D[] HitRay = Physics2D.RaycastAll(User.transform.position, AttackDir, 10f);
+        Vector3 TpPos = User.transform.position + AttackDir*12f;
+        RaycastHit2D[] HitRay = Physics2D.RaycastAll(User.transform.position, AttackDir, 12f);
         int SearchEnemyTill = HitRay.Length;
         
         if (HitRay.Length > 1) {
@@ -25,7 +25,9 @@ public class Katana : Melee
             {
                 if (HitRay[i].collider.CompareTag("Enemy"))
                 {
-                    HitRay[i].collider.GetComponent<Character>().Hit(mydata.damage * 5);
+                    Character c = HitRay[i].collider.GetComponent<Character>();
+                    c.Hit(mydata.damage * 2.5f);
+                    c.GetStun(1f);
                 }
             }
         }
