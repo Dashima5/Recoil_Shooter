@@ -10,13 +10,13 @@ public class Player : Character
     private Transform Top;
     private Melee MyMelee = null;
     private Transform GunSlot;
-    private Gun[] Guns = new Gun[4];
+    private Gun[] Guns = new Gun[3];
     private int Holdindex = 0;
 
     private PlayerFoot Foot;
     //private float FootRotZ = 0f;
 
-    public Text SpeedMag;
+    public Text UI_Hp;
     public Text SpeedX;
     public Text SpeedY;
     public Text Gunname;
@@ -31,7 +31,7 @@ public class Player : Character
             MyMelee = FindingMelee;
         }
         GunSlot = Top.Find("GunSlot");
-        for (int i = 0; i < GunSlot.childCount && i < 4; i++)
+        for (int i = 0; i < GunSlot.childCount && i < 3; i++)
         {
             if (GunSlot.GetChild(i).gameObject.TryGetComponent<Gun>(out var FindingGun)) { Guns[i] = FindingGun; }
         }
@@ -92,16 +92,19 @@ public class Player : Character
             int id = Holdindex + 1; id %= Guns.Length;
             GunChange(id);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha1)) { GunChange(0); }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) { GunChange(1); }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) { GunChange(2); }
 
         for (int i = 0; i < Guns.Length; i++)
         {
              Guns[i].PassiveReload();
         }
 
-        SpeedMag.text = "HP: " + HP.ToString("F2");
+        UI_Hp.text = "HP: " + HP.ToString("F2");
         SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
         SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
-        Gunname.text = Holdindex.ToString();
+        Gunname.text = Holdindex.ToString() + ": " + Guns[Holdindex].GetName();
         Ammocount.text = Guns[Holdindex].UIAmmocount();
     }
     private void FixedUpdate()

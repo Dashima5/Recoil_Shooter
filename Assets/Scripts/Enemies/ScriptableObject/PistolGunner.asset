@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: PistolGunner
   MaxHp: 4
-  MoveSpeed: 4
+  MoveSpeed: 6
   AttackDecideTime: 2
   MeleeRange: 3
   MeleeNormalCharge: 0.5

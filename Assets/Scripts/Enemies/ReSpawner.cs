@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+public class Respawner : MonoBehaviour
 {
     public bool Respawn = true;
     public float RespawnTime;
@@ -25,7 +25,9 @@ public class Spawner : MonoBehaviour
         TargetCode = Target.GetComponent<Enemy>();
         if(Target != null) { TargetDestoryed = false; }
         TargetCode.Respawn(gameObject);
-        TargetCode.SetPatrol(gameObject, PatrolPoint1, PatrolPoint2);
+        TargetCode.SetPatrol(gameObject.transform.position,
+                    PatrolPoint1.transform.position,
+                    PatrolPoint2.transform.position);
     }
 
     // Update is called once per frame
@@ -40,7 +42,9 @@ public class Spawner : MonoBehaviour
                 TargetCode = Target.GetComponent<Enemy>();
                 if (Target != null) { TargetDestoryed = false; }
                 TargetCode.Respawn(gameObject);
-                TargetCode.SetPatrol(gameObject, PatrolPoint1, PatrolPoint2);
+                TargetCode.SetPatrol(gameObject.transform.position,
+                    PatrolPoint1.transform.position,
+                    PatrolPoint2.transform.position);
                 RespwanTimeCurrent = 0f;
             }
         }

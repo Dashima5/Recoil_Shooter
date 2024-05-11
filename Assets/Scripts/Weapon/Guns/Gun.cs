@@ -38,7 +38,7 @@ public class Gun : MonoBehaviour
     {
         if (Ammo < gunData.magsize)
         {
-            Ammo += gunData.magsize * Time.deltaTime / (gunData.magsize * 2);
+            Ammo += gunData.magsize * Time.deltaTime / (gunData.reloadTime * 2);
 
         }
         else Ammo = gunData.magsize;

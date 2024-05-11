@@ -113,7 +113,7 @@ public abstract class Melee : MonoBehaviour
     {
         hitbox.Set(mydata.damage, mydata.knockback, mydata.target);
         hitbox.gameObject.SetActive(true);
-        return AttackDir * (5 + mydata.dash * ChargedTime);
+        return AttackDir * mydata.dash;
     }
 
     abstract protected Vector3 SkilStart(Vector3 AttackDir);

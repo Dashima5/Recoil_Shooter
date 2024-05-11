@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Grunt
   MaxHp: 5
-  MoveSpeed: 6
+  MoveSpeed: 8
   AttackDecideTime: 2
   MeleeRange: 3
   MeleeNormalCharge: 0.75

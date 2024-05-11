@@ -21,7 +21,6 @@ MonoBehaviour:
   Automatic: 0
   reloadTime: 1.5
   bullet: {fileID: 990272475781579284, guid: 19cb67d81ddad334a9c4a6eedc8ef9bd, type: 3}
-  bulletSpeed: 50
+  bulletSpeed: 30
   bulletPershot: 5
   spread: 0.2
-  reloading: 0

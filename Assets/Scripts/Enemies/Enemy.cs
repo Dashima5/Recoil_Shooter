@@ -37,7 +37,7 @@ public class Enemy : Character
     protected float playerDis;
     protected RaycastHit2D RayToPlayer;
 
-    private Spawner MySpawner;
+    private Respawner MySpawner;
 
     protected Action IdleAction;
     protected Action ChaseAction;
@@ -131,12 +131,12 @@ public class Enemy : Character
         else if (MyData.ChaseType == EnemyChaseType.RemainMeleeRange
              && playerDis < MyData.MeleeRange && RayToPlayer.collider == null)
         {
-            MoveVelocity = -1 * playerDir * MoveSpeed;
+            MoveVelocity = -playerDir * MoveSpeed;
         }
         else if (MyData.ChaseType == EnemyChaseType.RemainMeleeRange
              && playerDis < MyData.GunRange && RayToPlayer.collider == null)
         {
-            MoveVelocity = -1 *playerDir * MoveSpeed;
+            MoveVelocity = -playerDir * MoveSpeed;
         }
         else { MoveVelocity = PathDir * MoveSpeed; }
     }
@@ -208,7 +208,7 @@ public class Enemy : Character
                         else
                         {
                             rotZ = Mathf.Atan2(PathDir.y, PathDir.x) * Mathf.Rad2Deg;
-                            MoveVelocity = PathDir * MoveSpeed / 2;
+                            MoveVelocity = PathDir * MoveSpeed;
                         }
                         break;
                     default:
@@ -219,7 +219,7 @@ public class Enemy : Character
                         }
                         PathTarget = PatrolPoints[Patrolindex];
                         rotZ = Mathf.Atan2(PathDir.y, PathDir.x) * Mathf.Rad2Deg;
-                        MoveVelocity = PathDir * MoveSpeed / 2;
+                        MoveVelocity = PathDir * MoveSpeed;
                         break;
 
                 }
@@ -288,7 +288,7 @@ public class Enemy : Character
     }
 
     public void Respawn(GameObject SpawnerObject) {
-        MySpawner = SpawnerObject.GetComponent<Spawner>();
+        MySpawner = SpawnerObject.GetComponent<Respawner>();
         this.transform.position = MySpawner.transform.position;
     }
     private void OnDestroy()
@@ -299,12 +299,12 @@ public class Enemy : Character
         }
     }
 
-    public void SetPatrol(GameObject Patrol0, GameObject Patrol1, GameObject Patrol2)
+    public void SetPatrol(Vector3 Patrol0, Vector3 Patrol1, Vector3 Patrol2)
     {
         if (PatrolPoints.Count > 0) PatrolPoints.Clear();
-        if(Patrol0 != null) { PatrolPoints.Add(Patrol0.transform.position); }
-        if(Patrol1 != null) { PatrolPoints.Add(Patrol1.transform.position); }
-        if(Patrol2 != null) { PatrolPoints.Add(Patrol2.transform.position); }
+        if(Patrol0 != null) { PatrolPoints.Add(Patrol0); }
+        if(Patrol1 != null) { PatrolPoints.Add(Patrol1); }
+        if(Patrol2 != null) { PatrolPoints.Add(Patrol2); }
     }
 
 }
