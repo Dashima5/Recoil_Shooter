@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.XR;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Gun", menuName ="Weapon/Gun")]
@@ -12,8 +13,8 @@ public class GunData : ScriptableObject
     public float range;
     public float magsize;
     public float fireRate;
-    public bool Automatic;
     public float reloadTime;
+    public float passiveReloadRate;
     public GameObject bullet;
     public float bulletSpeed;
     public int bulletPershot;

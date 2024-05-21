@@ -38,7 +38,8 @@ public class Gun : MonoBehaviour
     {
         if (Ammo < gunData.magsize)
         {
-            Ammo += gunData.magsize * Time.deltaTime / (gunData.reloadTime * 2);
+            //Ammo += gunData.magsize * Time.deltaTime / (gunData.reloadTime * gunData.passiveReloadRate); //수동 재장전 비례
+            Ammo += Time.deltaTime * (gunData.fireRate / 60f) / gunData.passiveReloadRate; //공속 비례: 탄창을 다쓰면 사실상 공속감소
 
         }
         else Ammo = gunData.magsize;
@@ -64,7 +65,6 @@ public class Gun : MonoBehaviour
         else return Ammo.ToString("F2");
     }
     public float Ammocount() { return Ammo; }
-    public bool IsAuto() { return gunData.Automatic; }
 
     public void Flip(bool Flipbool) {
         GetComponent<SpriteRenderer>().flipY = Flipbool;

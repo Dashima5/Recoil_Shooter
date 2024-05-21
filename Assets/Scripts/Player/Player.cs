@@ -10,11 +10,10 @@ public class Player : Character
     private Transform Top;
     private Melee MyMelee = null;
     private Transform GunSlot;
-    private Gun[] Guns = new Gun[3];
+    private Gun[] Guns = new Gun[4];
     private int Holdindex = 0;
 
     private PlayerFoot Foot;
-    //private float FootRotZ = 0f;
 
     public Text UI_Hp;
     public Text SpeedX;
@@ -31,7 +30,7 @@ public class Player : Character
             MyMelee = FindingMelee;
         }
         GunSlot = Top.Find("GunSlot");
-        for (int i = 0; i < GunSlot.childCount && i < 3; i++)
+        for (int i = 0; i < GunSlot.childCount && i < 4; i++)
         {
             if (GunSlot.GetChild(i).gameObject.TryGetComponent<Gun>(out var FindingGun)) { Guns[i] = FindingGun; }
         }
@@ -49,7 +48,14 @@ public class Player : Character
 
         Foot = transform.Find("Foot").GetComponent<PlayerFoot>();
     }
-
+    protected Vector3 TrackMouse()
+    {
+        Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
+        Vector3 FireDir = Input.mousePosition - PlayerScreenPos;
+        FireDir.Normalize();
+        FireDir.z = 0;
+        return FireDir;
+    }
     protected override void UpdateLogic()
     {
         Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -62,28 +68,21 @@ public class Player : Character
         }
         else { Guns[Holdindex].Flip(false); }
 
-        if ((Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Guns[Holdindex].IsAuto()))
-            && Guns[Holdindex].GetCanShoot())
+        //if ((Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Guns[Holdindex].IsAuto()))
+            //&& Guns[Holdindex].GetCanShoot())
+        if(Input.GetMouseButton(0) && Guns[Holdindex].GetCanShoot())
         {
-            Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
-            Vector3 FireDir = Input.mousePosition - PlayerScreenPos;
-            FireDir.Normalize();
-            FireDir.z = 0;
-            RecoilVelocity = Guns[Holdindex].Fire(FireDir, rotZ);
+            RecoilVelocity = Guns[Holdindex].Fire(TrackMouse(), rotZ); ;
         }
 
-        if(Input.GetMouseButtonDown(1) && MyMelee != null)
+        if(Input.GetMouseButton(1) && MyMelee != null)
         {
-            MyMelee.StartCharge();
+            MyMelee.StartCharge(TrackMouse());
         }
 
-        if (Input.GetMouseButtonUp(1) && MyMelee != null)
+        if (Input.GetMouseButtonUp(1) && MyMelee != null && MyMelee.GetState() == MeleeState.Charge)
         {
-            Vector3 PlayerScreenPos = Camera.main.WorldToScreenPoint(transform.position);
-            Vector3 FireDir = Input.mousePosition - PlayerScreenPos;
-            FireDir.Normalize();
-            FireDir.z = 0;
-            RecoilVelocity = MyMelee.DoAttack(FireDir, RecoilVelocity);
+            RecoilVelocity = MyMelee.DoAttack(TrackMouse());
         }
 
         if (Input.GetKeyDown(KeyCode.R)) { Guns[Holdindex].StartReload(); }//들고있는 무기의 수동 재장전 시작
@@ -95,6 +94,7 @@ public class Player : Character
         if (Input.GetKeyDown(KeyCode.Alpha1)) { GunChange(0); }
         if (Input.GetKeyDown(KeyCode.Alpha2)) { GunChange(1); }
         if (Input.GetKeyDown(KeyCode.Alpha3)) { GunChange(2); }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) { GunChange(3); }
 
         for (int i = 0; i < Guns.Length; i++)
         {
@@ -104,7 +104,7 @@ public class Player : Character
         UI_Hp.text = "HP: " + HP.ToString("F2");
         SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
         SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
-        Gunname.text = Holdindex.ToString() + ": " + Guns[Holdindex].GetName();
+        Gunname.text = (Holdindex + 1).ToString() + ": " + Guns[Holdindex].GetName();
         Ammocount.text = Guns[Holdindex].UIAmmocount();
     }
     private void FixedUpdate()
@@ -131,6 +131,10 @@ public class Player : Character
             }
         }
 
+    }
+
+    protected override void HitEffect()
+    {
     }
 
     protected override void WhenStun()

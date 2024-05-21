@@ -15,13 +15,12 @@ MonoBehaviour:
   name: Bazuka
   damage: 1
   recoil: 1
-  range: 50
+  range: 40
   magsize: 3
   fireRate: 100
-  Automatic: 0
   reloadTime: 3
+  passiveReloadRate: 3
   bullet: {fileID: 9025979625339884564, guid: 7a108d338e037d14a8bf394a4c6767b2, type: 3}
   bulletSpeed: 30
   bulletPershot: 1
   spread: 0
-  reloading: 0

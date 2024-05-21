@@ -53,7 +53,10 @@ public abstract class Character : MonoBehaviour
     public void Hit(float D)
     {
         HP -= D;
+        HitEffect();
     }
+
+    abstract protected void HitEffect();
 
     public void SetRecoil(Vector3 KBdirection, float KBpower)
     {

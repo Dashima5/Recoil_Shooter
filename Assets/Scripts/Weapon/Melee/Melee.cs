@@ -20,11 +20,12 @@ public abstract class Melee : MonoBehaviour
     protected float RecoverTime = 0f;
     protected SpriteRenderer sprite;
     protected HitBox hitbox;
+    protected Vector3 Direction;
 
     protected Character User;
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         hitbox = transform.Find("Hitbox").GetComponent<HitBox>();
         hitbox.gameObject.SetActive(false);
@@ -50,12 +51,12 @@ public abstract class Melee : MonoBehaviour
                 sprite.color = new Color(0,0,0,0.25f);
                 break;
             case MeleeState.Charge:
-                Timer += Time.deltaTime;
-                if (Timer >= mydata.ChargeTime)
+                if (Timer < mydata.ChargeTime)
                 {
-                    Timer = mydata.ChargeTime;
+                    Timer += Time.deltaTime;
+                    sprite.color = new Color(1, 1, 1, Timer / mydata.ChargeTime);
                 }
-                sprite.color = new Color(1, 1, 1, Timer / mydata.ChargeTime);
+                else { SkillCharge(Direction); }
                 break;
             case MeleeState.Attack:
                 if(ChargedTime >= mydata.ChargeTime)
@@ -63,7 +64,7 @@ public abstract class Melee : MonoBehaviour
                     SkilUpdate();
                 }
                 Timer += Time.deltaTime;
-                if(Timer >= mydata.attackProlong/100)
+                if(Timer >= mydata.attackProlong/60f)
                 {
                     hitbox.gameObject.SetActive(false);
                     state = MeleeState.Unable;
@@ -73,7 +74,7 @@ public abstract class Melee : MonoBehaviour
             case MeleeState.Unable:
                 sprite.color = Color.clear;
                 Timer += Time.deltaTime;
-                if(Timer >= mydata.attackRate / 100)
+                if(Timer >= mydata.attackRate / 60f)
                 {
                     state = MeleeState.Ready;
                     Timer = 0f;
@@ -82,31 +83,29 @@ public abstract class Melee : MonoBehaviour
         }
     }
 
-    public void StartCharge()
+    public void StartCharge(Vector3 dir)
     {
+        Direction = dir;
         if (state == MeleeState.Ready)
         {
             state = MeleeState.Charge;
         }
     }
-    public Vector3 DoAttack(Vector3 AttackDir, Vector3 ReceiveRecoil)
+    public Vector3 DoAttack(Vector3 AttackDir)
     {
-        if(state == MeleeState.Charge)
+        Direction = AttackDir;
+        ChargedTime = Timer;
+        Timer = 0f;
+        state = MeleeState.Attack;
+        if(ChargedTime < mydata.ChargeTime)
         {
-            ChargedTime = Timer;
-            Timer = 0f;
-            state = MeleeState.Attack;
-            if(ChargedTime < mydata.ChargeTime)
-            {
-                ReceiveRecoil = NormalAttack(AttackDir);
-                sprite.color = Color.yellow;
-            }
-            else
-            {
-                ReceiveRecoil = SkilStart(AttackDir);
-            }
+            sprite.color = Color.yellow;
+            return NormalAttack(AttackDir);
         }
-        return ReceiveRecoil;
+        else
+        { 
+            return SkilStart(AttackDir);
+        }
     }
 
     protected Vector3 NormalAttack(Vector3 AttackDir)
@@ -115,7 +114,7 @@ public abstract class Melee : MonoBehaviour
         hitbox.gameObject.SetActive(true);
         return AttackDir * mydata.dash;
     }
-
+    abstract protected void SkillCharge(Vector3 AttackDir);
     abstract protected Vector3 SkilStart(Vector3 AttackDir);
     abstract protected void SkilUpdate();
 

@@ -82,11 +82,12 @@ public class Enemy : Character
                 Spacing();
                 if (AttackTimer >= MyData.AttackDecideTime)
                 {
-                    if (MyMelee != null && playerDis <= MyData.MeleeRange && RayToPlayer.collider == null)
+                    if (MyMelee != null && playerDis <= MyData.MeleeRange && MyMelee.GetState() == MeleeState.Ready 
+                        && RayToPlayer.collider == null)
                     {
                         AttackDecide = EnemyAttackType.Melee;
                         AttackTimer = 0f;
-                        MyMelee.StartCharge();
+                        MyMelee.StartCharge(transform.right);
                     }
                     else if (MyGun != null && playerDis <= MyData.GunRange && RayToPlayer.collider == null)
                     {
@@ -99,7 +100,7 @@ public class Enemy : Character
                 MoveVelocity = Vector3.zero;
                 if (AttackTimer >= MyData.MeleeNormalCharge && MyMelee.GetState() == MeleeState.Charge)
                 {
-                    RecoilVelocity = MyMelee.DoAttack(transform.right, RecoilVelocity);
+                    RecoilVelocity = MyMelee.DoAttack(transform.right);
                     AttackDecide = EnemyAttackType.NotDecided;
                     AttackTimer = 0f;
                 }
@@ -275,9 +276,8 @@ public class Enemy : Character
         if (Distance < MyData.Size) { currentWaypoint++; }
     }
 
-    public new void Hit(float D)
+    protected override void HitEffect()
     {
-        base.Hit(D);
         state = EnemyState.Chase;
         OutRangeTimer = 0f;
     }
