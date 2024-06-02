@@ -4,10 +4,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class Respawner : MonoBehaviour
 {
     public bool Respawn = true;
+    public float SpawnTimerStart = 0f;
     public float RespawnTime;
     private float RespwanTimeCurrent = 0f;
     public GameObject TargetPrefab;
@@ -15,23 +17,17 @@ public class Respawner : MonoBehaviour
     private Enemy TargetCode;
     private bool TargetDestoryed = true;
     private Transform TargetParent;
+    public bool CanSpawn() => RespwanTimeCurrent >= RespawnTime;
 
     public GameObject PatrolPoint1 = null;
     public GameObject PatrolPoint2 = null;
-    void Start()
+    protected void Start()
     {
         TargetParent = GameObject.Find("Enemies").transform;
-        Target = Instantiate(TargetPrefab, TargetParent);
-        TargetCode = Target.GetComponent<Enemy>();
-        if(Target != null) { TargetDestoryed = false; }
-        TargetCode.Respawn(gameObject);
-        TargetCode.SetPatrol(gameObject.transform.position,
-                    PatrolPoint1.transform.position,
-                    PatrolPoint2.transform.position);
+        RespwanTimeCurrent = SpawnTimerStart;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Spawn()
     {
         if (TargetDestoryed && Respawn)
         {
@@ -48,6 +44,7 @@ public class Respawner : MonoBehaviour
                 RespwanTimeCurrent = 0f;
             }
         }
+        else RespwanTimeCurrent = 0f;
     }
 
     public void UnTarget() {
@@ -55,4 +52,5 @@ public class Respawner : MonoBehaviour
         TargetCode = null;
         TargetDestoryed = true;
     }
+
 }

@@ -14,7 +14,7 @@ public class Gun : MonoBehaviour
         {
             Vector3 spreadVector = new Vector3(Random.Range(-gunData.spread, gunData.spread), Random.Range(-gunData.spread, gunData.spread), 0);
             GameObject newbullet = Instantiate(gunData.bullet) as GameObject;
-            newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, gunData.range, transform.position, rotZ, Dir+spreadVector);
+            newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, transform.position, Dir + spreadVector, rotZ: rotZ, range: gunData.range);
         }
         Ammo -= 1f;
         TimeSincelastFire = 0;
@@ -50,7 +50,7 @@ public class Gun : MonoBehaviour
         yield return new WaitForSeconds(gunData.reloadTime);
         Ammo = gunData.magsize;
         Reloading = false;
-        Debug.Log("Reload Complete!");
+        //Debug.Log("Reload Complete!");
     }
     public void StartReload()
     {

@@ -13,19 +13,21 @@ public class Bullet : MonoBehaviour
     private float travelDis = 0;
     private float MaxtravelDis = 25f;
     public string target = "Enemy";
-    
+    private float MaxFuse = 3f;
 
-    public void Set(float damage, float speed, float range, Vector3 position, float rotZ, Vector3 direction)
+
+    public void Set(float damage, float speed, Vector3 position, Vector3 ShootDir, float rotZ = 0f, float range = 25f, float MaxFuse = 1f)
     {
         this.Damage = damage;
         MaxtravelDis = range;
+        this.MaxFuse = MaxFuse;
         transform.SetPositionAndRotation(position, Quaternion.Euler(0, 0, rotZ));
-        GetComponent<Rigidbody2D>().velocity = new Vector3(direction.x, direction.y, 0).normalized * speed;
+        GetComponent<Rigidbody2D>().velocity = new Vector3(ShootDir.x, ShootDir.y, 0).normalized * speed;
     }
     void Start()
     {
         oldPos = transform.position;
-        Destroy(gameObject, 3f);
+        Destroy(gameObject, MaxFuse);
     }
 
     // Update is called once per frame

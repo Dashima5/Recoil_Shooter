@@ -16,13 +16,14 @@ MonoBehaviour:
   MaxHp: 1
   MoveSpeed: 12
   AttackDecideTime: 0
-  MeleeRange: 0
+  MeleeRange: 5
   MeleeNormalCharge: 0
   GunRange: 0
-  GunAimTime: 0
+  GunAimTime: 4
   ChaseType: 4
-  Size: 0
-  SearchRange: 0
-  ChasePersistance: 0
-  GuardPersistance: 0
+  Size: 0.5
+  SearchRange: 25
+  ChasePersistance: 10
+  GuardPersistance: 25
   TurnSpeed: 200
+  WallOption: 0

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: TpDagger
   damage: 1
-  dash: 10
-  knockback: 10
+  dash: 7.5
+  knockback: 7.5
   attackRate: 30
   attackProlong: 15
   ChargeTime: 0.5

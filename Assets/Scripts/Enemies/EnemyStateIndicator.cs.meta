@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 6bb3333964b270c4eba6fb346393baa8
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - ShapeIdle: {fileID: 21300000, guid: 412801dde6d26b745aebb3c53d0496cd, type: 3}
+  - ShapeGuard: {fileID: 21300000, guid: de120e17908a17a48abbbc42755f5fec, type: 3}
+  - ShapeChase: {fileID: 21300000, guid: ad290d14bac6800489f007ef1c6b2027, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

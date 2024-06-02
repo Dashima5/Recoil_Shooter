@@ -48,13 +48,13 @@ public abstract class Melee : MonoBehaviour
         switch (state)
         {
             case MeleeState.Ready:
-                sprite.color = new Color(0,0,0,0.25f);
+                //sprite.color = new Color(0,0,0,0.25f);
                 break;
             case MeleeState.Charge:
                 if (Timer < mydata.ChargeTime)
                 {
                     Timer += Time.deltaTime;
-                    sprite.color = new Color(1, 1, 1, Timer / mydata.ChargeTime);
+                    //sprite.color = new Color(1, 1, 1, Timer / mydata.ChargeTime);
                 }
                 else { SkillCharge(Direction); }
                 break;
@@ -72,7 +72,7 @@ public abstract class Melee : MonoBehaviour
                 }
                 break;
             case MeleeState.Unable:
-                sprite.color = Color.clear;
+                //sprite.color = Color.clear;
                 Timer += Time.deltaTime;
                 if(Timer >= mydata.attackRate / 60f)
                 {
@@ -99,7 +99,7 @@ public abstract class Melee : MonoBehaviour
         state = MeleeState.Attack;
         if(ChargedTime < mydata.ChargeTime)
         {
-            sprite.color = Color.yellow;
+            //sprite.color = Color.yellow;
             return NormalAttack(AttackDir);
         }
         else

@@ -14,15 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Carrier
   MaxHp: 10
-  MoveSpeed: 1
+  MoveSpeed: 5
   AttackDecideTime: 0
   MeleeRange: 0
   MeleeNormalCharge: 0
-  GunRange: 0
-  GunAimTime: 0
+  GunRange: 20
+  GunAimTime: 3
   ChaseType: 3
-  Size: 0
-  SearchRange: 0
-  ChasePersistance: 0
-  GuardPersistance: 0
+  Size: 1.2
+  SearchRange: 25
+  ChasePersistance: 5
+  GuardPersistance: 5
   TurnSpeed: 200
+  WallOption: 2

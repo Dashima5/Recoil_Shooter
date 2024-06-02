@@ -20,7 +20,7 @@ MonoBehaviour:
   MeleeNormalCharge: 0
   GunRange: 0
   GunAimTime: 0
-  ChaseType: 0
+  ChaseType: 2
   Size: 0
   SearchRange: 0
   ChasePersistance: 0

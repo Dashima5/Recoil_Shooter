@@ -21,6 +21,7 @@ public class EnemyData : ScriptableObject
     public float ChasePersistance;
     public float GuardPersistance;
     public float TurnSpeed = 200f;
+    public EnemyWallOption WallOption = EnemyWallOption.AllBlocked;
 }
 
 public enum EnemyChaseType{
@@ -29,4 +30,12 @@ public enum EnemyChaseType{
     RemainMeleeRange,
     RemainGunRange,
     AsCloseAsPossible
+}
+
+public enum EnemyWallOption
+{
+    AllBlocked,
+    SeeThrough,
+    SeeAndShootThrough,
+    SeeAndSkillThrough
 }

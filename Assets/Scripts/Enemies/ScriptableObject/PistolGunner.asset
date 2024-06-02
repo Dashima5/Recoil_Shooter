@@ -20,9 +20,10 @@ MonoBehaviour:
   MeleeNormalCharge: 0.5
   GunRange: 10
   GunAimTime: 1
-  ChaseType: 1
+  ChaseType: 3
   Size: 0.5
   SearchRange: 15
   ChasePersistance: 1
   GuardPersistance: 2
   TurnSpeed: 300
+  WallOption: 0

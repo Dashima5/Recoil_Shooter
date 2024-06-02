@@ -19,16 +19,14 @@ public enum EnemyAttackType
     //Skill,
     Gun,
 }
-public class Enemy : Character
+public abstract class Enemy : Character
 {
     [SerializeField] protected EnemyData MyData;
     protected EnemyState state = EnemyState.Idle;
+    private EnemyStateIndicator StateIndicator;
 
     protected EnemyAttackType AttackDecide = EnemyAttackType.NotDecided;
     protected float AttackTimer = 0f;
-    
-    protected Gun MyGun = null;
-    protected Melee MyMelee = null;
     
     protected float OutRangeTimer = 0f;
 
@@ -52,6 +50,8 @@ public class Enemy : Character
     protected List<Vector3> PatrolPoints = new List<Vector3>();
     protected int Patrolindex = 0;
 
+    protected bool Stopping = false;
+
     new protected void Start()
     {
         MaxHP = MyData.MaxHp;
@@ -65,98 +65,13 @@ public class Enemy : Character
         playerDir = transform.position - player.transform.position;
         playerDis = playerDir.magnitude;
 
-        MyGun = GetComponentInChildren<Gun>();
-        MyMelee = GetComponentInChildren<Melee>();
-
         IdleAction += IdleLogic;
         ChaseAction += ChaseLogic;
         UpdateAction += UpdateLogic2;
-    }
-    protected void IdleLogic() {}
-    protected void ChaseLogic()
-    {
-        AttackTimer += Time.deltaTime;
-        switch (AttackDecide)
-        {
-            case EnemyAttackType.NotDecided:
-                Spacing();
-                if (AttackTimer >= MyData.AttackDecideTime)
-                {
-                    if (MyMelee != null && playerDis <= MyData.MeleeRange && MyMelee.GetState() == MeleeState.Ready 
-                        && RayToPlayer.collider == null)
-                    {
-                        AttackDecide = EnemyAttackType.Melee;
-                        AttackTimer = 0f;
-                        MyMelee.StartCharge(transform.right);
-                    }
-                    else if (MyGun != null && playerDis <= MyData.GunRange && RayToPlayer.collider == null)
-                    {
-                        AttackDecide = EnemyAttackType.Gun;
-                        AttackTimer = 0f;
-                    }
-                }
-                break;
-            case EnemyAttackType.Melee:
-                MoveVelocity = Vector3.zero;
-                if (AttackTimer >= MyData.MeleeNormalCharge && MyMelee.GetState() == MeleeState.Charge)
-                {
-                    RecoilVelocity = MyMelee.DoAttack(transform.right);
-                    AttackDecide = EnemyAttackType.NotDecided;
-                    AttackTimer = 0f;
-                }
-                break;
-            case EnemyAttackType.Gun:
-                MoveVelocity = Vector3.zero;
-                if (AttackTimer >= MyData.GunAimTime && MyGun.GetCanShoot())
-                {
-                    RecoilVelocity = MyGun.Fire(transform.right, transform.rotation.z);
-                    AttackDecide = EnemyAttackType.NotDecided;
-                    AttackTimer = 0f;
-                }
-                break;
-        }
-    }
 
-    private void Spacing()
-    {
-        if (MyData.ChaseType == EnemyChaseType.StopMeleeRange
-             && playerDis < MyData.MeleeRange && RayToPlayer.collider == null)
-        {
-            MoveVelocity = Vector3.zero;
-        }
-        else if (MyData.ChaseType == EnemyChaseType.StopMeleeRange
-             && playerDis < MyData.GunRange && RayToPlayer.collider == null)
-        {
-            MoveVelocity = Vector3.zero;
-        }
-        else if (MyData.ChaseType == EnemyChaseType.RemainMeleeRange
-             && playerDis < MyData.MeleeRange && RayToPlayer.collider == null)
-        {
-            MoveVelocity = -playerDir * MoveSpeed;
-        }
-        else if (MyData.ChaseType == EnemyChaseType.RemainMeleeRange
-             && playerDis < MyData.GunRange && RayToPlayer.collider == null)
-        {
-            MoveVelocity = -playerDir * MoveSpeed;
-        }
-        else { MoveVelocity = PathDir * MoveSpeed; }
+        StateIndicator = GetComponentInChildren<EnemyStateIndicator>();
     }
-    protected void UpdateLogic2() 
-    {
-        if(MyGun != null){
-            if (MyGun.Ammocount() < 1)
-            {
-                MyGun.StartReload();
-                Debug.Log("Gunner out of ammo. Reloading...");
-            }
-
-            if (Mathf.Abs(rotZ) > 90)
-            {
-                MyGun.Flip(true);
-            }
-            else { MyGun.Flip(false); }
-        }
-    }
+    
    
     void UpdatePath()
     {
@@ -179,15 +94,17 @@ public class Enemy : Character
         {
             playerDir = player.transform.position - transform.position;
             playerDis = playerDir.magnitude;
+            playerDir.Normalize();
         }
         float RayDistance = MyData.SearchRange;
-        if (playerDis < MyData.SearchRange) { RayDistance = playerDis; }
-        RayToPlayer = Physics2D.Raycast(transform.position, playerDir.normalized, RayDistance, LayerMask.GetMask("Platform"));
+        if (playerDis <= MyData.SearchRange) { RayDistance = playerDis; }
+        RayToPlayer = Physics2D.Raycast(transform.position, playerDir, RayDistance, LayerMask.GetMask("Platform"));
+
+        Stopping = false;
 
         switch (state)
         {
             case EnemyState.Idle:
-                sprite.color = Color.white;
                 AttackTimer = 0f;
                 OutRangeTimer = 0f;
 
@@ -204,12 +121,11 @@ public class Enemy : Character
                         if (Vector3.Distance(transform.position, PathTarget) <= MyData.Size * 2)
                         {
                             rotZ = 0f;
-                            MoveVelocity = Vector3.zero;
+                            Stopping = true;
                         }
                         else
                         {
                             rotZ = Mathf.Atan2(PathDir.y, PathDir.x) * Mathf.Rad2Deg;
-                            MoveVelocity = PathDir * MoveSpeed;
                         }
                         break;
                     default:
@@ -220,12 +136,11 @@ public class Enemy : Character
                         }
                         PathTarget = PatrolPoints[Patrolindex];
                         rotZ = Mathf.Atan2(PathDir.y, PathDir.x) * Mathf.Rad2Deg;
-                        MoveVelocity = PathDir * MoveSpeed;
                         break;
 
                 }
 
-                if (playerDis < MyData.SearchRange && RayToPlayer.collider == null && player != null)
+                if (playerDis <= MyData.SearchRange && RayToPlayer.collider == null && player != null)
                 {
                     PathTarget = player.transform.position;
                     seeker.StartPath((Vector3)Rb.position, PathTarget, OnPathComplete);
@@ -235,23 +150,20 @@ public class Enemy : Character
 
             case EnemyState.Chase:
                 if (player == null) { state = EnemyState.Idle; break; }
-                sprite.color = Color.red;
-                PathTarget = player.transform.position;
-                playerDir.Normalize();
+                //PathTarget = player.transform.position;
                 rotZ = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg;
 
                 ChaseAction();
 
                 if (playerDis > MyData.SearchRange && RayToPlayer.collider != null) { OutRangeTimer += Time.deltaTime; }
-                if (OutRangeTimer >= MyData.ChasePersistance) { state = EnemyState.Guard; OutRangeTimer = 0f; }
+                if (OutRangeTimer >= MyData.ChasePersistance) { state = EnemyState.Guard; OutRangeTimer = 0f; AttackTimer = 0f; }
 
                 break;
 
             case EnemyState.Guard:
-                sprite.color = Color.yellow;
-                MoveVelocity = Vector3.zero;
-                PathTarget = player.transform.position;
-                if (playerDis < MyData.SearchRange && RayToPlayer.collider == null)
+                Stopping = true;
+                if(player != null)PathTarget = player.transform.position;
+                if (playerDis <= MyData.SearchRange && RayToPlayer.collider == null)
                 {
                     state = EnemyState.Chase;
                     OutRangeTimer = 0f;
@@ -263,8 +175,11 @@ public class Enemy : Character
                 }
                 break;
         }
+        if(StateIndicator != null) StateIndicator.StateNow = state;
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), MyData.TurnSpeed * Time.deltaTime);
+        if (Stopping) { MoveVelocity = Vector3.zero; }
+        else MoveVelocity = PathDir * MyData.MoveSpeed;
     }
     private void FixedUpdate()
     {
@@ -276,22 +191,44 @@ public class Enemy : Character
         if (Distance < MyData.Size) { currentWaypoint++; }
     }
 
+    abstract protected void IdleLogic();
+    abstract protected void ChaseLogic();
+    protected void Spacing()
+    {
+        if (MyData.ChaseType == EnemyChaseType.StopMeleeRange
+             && playerDis < MyData.MeleeRange && RayToPlayer.collider == null)
+        {
+            Stopping = true;
+        }
+        else if (MyData.ChaseType == EnemyChaseType.StopMeleeRange
+             && playerDis < MyData.GunRange && RayToPlayer.collider == null)
+        {
+            Stopping = true;
+        }
+        else if (MyData.ChaseType == EnemyChaseType.RemainMeleeRange
+             && playerDis < MyData.MeleeRange && RayToPlayer.collider == null)
+        {
+            PathTarget = -playerDir * playerDis;
+        }
+        else if (MyData.ChaseType == EnemyChaseType.RemainGunRange
+             && playerDis < MyData.GunRange && RayToPlayer.collider == null)
+        {
+            PathTarget = -playerDir * playerDis;
+        }
+        else { PathTarget = player.transform.position;}
+    }
+    abstract protected void UpdateLogic2();
     protected override void HitEffect()
     {
         state = EnemyState.Chase;
         OutRangeTimer = 0f;
-    }
-    protected override void WhenStun()
-    {
-        if (MyGun != null) { MyGun.StopReload(); }
-        if (MyMelee != null) { MyMelee.CancelCharge(); }
     }
 
     public void Respawn(GameObject SpawnerObject) {
         MySpawner = SpawnerObject.GetComponent<Respawner>();
         this.transform.position = MySpawner.transform.position;
     }
-    private void OnDestroy()
+    protected void OnDestroy()
     {
         if (MySpawner != null)
         {
