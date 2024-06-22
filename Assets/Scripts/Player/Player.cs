@@ -15,11 +15,13 @@ public class Player : Character
 
     private PlayerFoot Foot;
 
+    
     public Text UI_Hp;
     public Text SpeedX;
     public Text SpeedY;
     public Text Gunname;
     public Text Ammocount;
+    
 
     new void Start()
     {
@@ -68,8 +70,6 @@ public class Player : Character
         }
         else { Guns[Holdindex].Flip(false); }
 
-        //if ((Input.GetMouseButtonDown(0) | (Input.GetMouseButton(0) && Guns[Holdindex].IsAuto()))
-            //&& Guns[Holdindex].GetCanShoot())
         if(Input.GetMouseButton(0) && Guns[Holdindex].GetCanShoot())
         {
             RecoilVelocity = Guns[Holdindex].Fire(TrackMouse(), rotZ); ;
@@ -100,12 +100,13 @@ public class Player : Character
         {
              Guns[i].PassiveReload();
         }
-
+        
         UI_Hp.text = "HP: " + HP.ToString("F2");
         SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
         SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
         Gunname.text = (Holdindex + 1).ToString() + ": " + Guns[Holdindex].GetName();
         Ammocount.text = Guns[Holdindex].UIAmmocount();
+        
     }
     private void FixedUpdate()
     {
@@ -136,7 +137,10 @@ public class Player : Character
     protected override void HitEffect()
     {
     }
-
+    public override Vector3 GetTargetDirection()
+    {
+        return TrackMouse();
+    }
     protected override void WhenStun()
     {
         if (Guns[Holdindex] != null) { Guns[Holdindex].StopReload(); }

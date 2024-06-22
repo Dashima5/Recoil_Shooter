@@ -41,7 +41,7 @@ public class TpDagger : Melee
                 {
                     Character c = HitRay[i].collider.GetComponent<Character>();
                     c.Hit(mydata.damage * 2.5f);
-                    c.GetStun(1f);
+                    c.AddStun(1f);
                 }
             }
         }
@@ -50,4 +50,5 @@ public class TpDagger : Melee
     }
 
     override protected void SkilUpdate() { }
+    override protected void SkillEnd() { }
 }

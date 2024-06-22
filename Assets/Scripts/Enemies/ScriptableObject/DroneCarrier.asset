@@ -15,12 +15,12 @@ MonoBehaviour:
   name: Carrier
   MaxHp: 10
   MoveSpeed: 5
-  AttackDecideTime: 0
-  MeleeRange: 0
+  AttackDecideTime: 2
+  MeleeRange: 10
   MeleeNormalCharge: 0
   GunRange: 20
   GunAimTime: 3
-  ChaseType: 3
+  ChaseType: 2
   Size: 1.2
   SearchRange: 25
   ChasePersistance: 5

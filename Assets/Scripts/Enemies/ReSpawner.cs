@@ -17,34 +17,39 @@ public class Respawner : MonoBehaviour
     private Enemy TargetCode;
     private bool TargetDestoryed = true;
     private Transform TargetParent;
-    public bool CanSpawn() => RespwanTimeCurrent >= RespawnTime;
+    private Vector3 SpawnPoint;
+    public bool CanSpawn() => TargetDestoryed && Respawn && RespwanTimeCurrent >= RespawnTime;
 
     public GameObject PatrolPoint1 = null;
     public GameObject PatrolPoint2 = null;
     protected void Start()
     {
         TargetParent = GameObject.Find("Enemies").transform;
+        SpawnPoint = transform.Find("SpawnPoint").transform.position;
         RespwanTimeCurrent = SpawnTimerStart;
     }
 
-    public void Spawn()
+    private void Update()
     {
         if (TargetDestoryed && Respawn)
         {
-            RespwanTimeCurrent += Time.deltaTime;
-            if (RespwanTimeCurrent >= RespawnTime)
-            {
-                Target = Instantiate(TargetPrefab, TargetParent);
-                TargetCode = Target.GetComponent<Enemy>();
-                if (Target != null) { TargetDestoryed = false; }
-                TargetCode.Respawn(gameObject);
-                TargetCode.SetPatrol(gameObject.transform.position,
-                    PatrolPoint1.transform.position,
-                    PatrolPoint2.transform.position);
-                RespwanTimeCurrent = 0f;
-            }
+            if(RespwanTimeCurrent < RespawnTime) RespwanTimeCurrent += Time.deltaTime;
         }
         else RespwanTimeCurrent = 0f;
+    }
+    public void Spawn()
+    {
+        if (CanSpawn()) 
+        {
+            Target = Instantiate(TargetPrefab, SpawnPoint, Quaternion.Euler(0,0,0), TargetParent);
+            if (Target != null) { TargetDestoryed = false; }
+            TargetCode = Target.GetComponent<Enemy>();
+            TargetCode.Respawn(gameObject);
+            TargetCode.SetPatrol(SpawnPoint,
+                PatrolPoint1.transform.position,
+                PatrolPoint2.transform.position);
+            RespwanTimeCurrent = 0f;
+        }
     }
 
     public void UnTarget() {

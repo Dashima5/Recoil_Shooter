@@ -102,6 +102,7 @@ MonoBehaviour:
   target: Player
   ExPower: 10
   ExRange: 4
+  AlsoEffectsAlly: 0
   AllyProtection: 0
 --- !u!50 &5182467474563072307
 Rigidbody2D:

@@ -18,6 +18,7 @@ MonoBehaviour:
   knockback: 5
   attackRate: 300
   attackProlong: 20
-  ChargeTime: 0.5
+  SkillActiveCharge: 1
+  SkillProlong: 0
   UserType: Enemy
   target: Player

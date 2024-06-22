@@ -175,7 +175,6 @@ public abstract class Enemy : Character
                 }
                 break;
         }
-        if(StateIndicator != null) StateIndicator.StateNow = state;
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), MyData.TurnSpeed * Time.deltaTime);
         if (Stopping) { MoveVelocity = Vector3.zero; }
@@ -223,7 +222,17 @@ public abstract class Enemy : Character
         state = EnemyState.Chase;
         OutRangeTimer = 0f;
     }
-
+    public override Vector3 GetTargetDirection()
+    {
+        if(state == EnemyState.Chase)
+        {
+            return playerDir.normalized;
+        }
+        else
+        {
+            return PathDir.normalized;
+        }
+    }
     public void Respawn(GameObject SpawnerObject) {
         MySpawner = SpawnerObject.GetComponent<Respawner>();
         this.transform.position = MySpawner.transform.position;
@@ -244,4 +253,5 @@ public abstract class Enemy : Character
         if(Patrol2 != null) { PatrolPoints.Add(Patrol2); }
     }
 
+    public EnemyState GetState() { return state; }
 }

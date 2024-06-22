@@ -13,8 +13,8 @@ public class Gun : MonoBehaviour
         for (int i = 0; i < gunData.bulletPershot; i++)
         {
             Vector3 spreadVector = new Vector3(Random.Range(-gunData.spread, gunData.spread), Random.Range(-gunData.spread, gunData.spread), 0);
-            GameObject newbullet = Instantiate(gunData.bullet) as GameObject;
-            newbullet.gameObject.GetComponent<Bullet>().Set(gunData.damage, gunData.bulletSpeed, transform.position, Dir + spreadVector, rotZ: rotZ, range: gunData.range);
+            Projectile newbullet = Instantiate(gunData.bullet).GetComponent<Projectile>();
+            newbullet.Set(gunData.damage, gunData.bulletSpeed, transform.position, Dir + spreadVector, rotZ: rotZ, range: gunData.range);
         }
         Ammo -= 1f;
         TimeSincelastFire = 0;

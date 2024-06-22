@@ -65,8 +65,10 @@ public abstract class Character : MonoBehaviour
     }
 
     public Vector3 GetRecoil() { return RecoilVelocity; }
-    public void GetStun(float HowMuch) { Stun += HowMuch; }
+    abstract public Vector3 GetTargetDirection();
+    public void AddStun(float HowMuch) { Stun += HowMuch; }
     abstract protected void WhenStun();
+    public float GetStunTime() { return Stun; }
 
     public void Heal(float h)
     {

@@ -45,6 +45,9 @@ public class StandardEnemy : Enemy
                 if (AttackTimer >= MyData.MeleeNormalCharge && MyMelee.GetState() == MeleeState.Charge)
                 {
                     RecoilVelocity = MyMelee.DoAttack(transform.right);
+                }
+                if(MyMelee.GetState() == MeleeState.Unable)
+                {
                     AttackDecide = EnemyAttackType.NotDecided;
                     AttackTimer = 0f;
                 }

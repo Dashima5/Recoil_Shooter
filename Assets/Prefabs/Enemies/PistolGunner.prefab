@@ -97,6 +97,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc16002c0a7e6d489035446f09d499f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AlsoEffectsAlly: 0
+  AllyProtection: 1
 --- !u!1 &3839926576030679464
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +109,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8769664488970553209}
   - component: {fileID: 8978965716444452549}
-  - component: {fileID: 4801815526783739813}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -182,18 +183,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4801815526783739813
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3839926576030679464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afc16002c0a7e6d489035446f09d499f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3850960499738607468
 GameObject:
   m_ObjectHideFlags: 0
@@ -291,10 +280,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bb3333964b270c4eba6fb346393baa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StateNow: 0
   ShapeIdle: {fileID: 21300000, guid: 412801dde6d26b745aebb3c53d0496cd, type: 3}
   ShapeGuard: {fileID: 21300000, guid: de120e17908a17a48abbbc42755f5fec, type: 3}
   ShapeChase: {fileID: 21300000, guid: ad290d14bac6800489f007ef1c6b2027, type: 3}
+  ShapeStun: {fileID: 21300000, guid: 723e2246e7f9edb42bd7ce570c312ce7, type: 3}
 --- !u!1 &6014728141038876090
 GameObject:
   m_ObjectHideFlags: 0

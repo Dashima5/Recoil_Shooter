@@ -12,7 +12,8 @@ public class MeleeData : ScriptableObject
     public float knockback;
     public float attackRate;
     public float attackProlong;
-    public float ChargeTime;
+    public float SkillActiveCharge;
+    public float SkillProlong;
     public string UserType;
     public string target;
 }

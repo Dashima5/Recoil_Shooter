@@ -1,45 +1,59 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using Unity.VisualScripting;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
 public class HitBox : MonoBehaviour
 {
-    private float Damage;
-    private float Knockback;
-    private string Target;
-    private Transform Origin;
-    private SpriteRenderer DebugSprite;
+    protected float Damage;
+    protected float Knockback;
+    protected float StunTime;
+    protected string Target;
+    protected Transform Origin;
+    private bool AlsoEffectsAlly = false;
+    private float AllyProtection = 1f;
+    //private SpriteRenderer DebugSprite;
 
-    private void Start()
+    protected void Start()
     {
-        Origin = transform.parent;
-        DebugSprite = GetComponent<SpriteRenderer>();
+        //DebugSprite = GetComponent<SpriteRenderer>();
     }
-    public void Set(float d, float k, string T)
+    public void Set(float d, float k, string T, Transform o, bool EffectsAlly = false, float AP = 1f, float s = 0f)
     {
         Damage = d;
         Knockback = k;
+        StunTime = s;
         Target = T;
+        Origin = o;
+        AlsoEffectsAlly = EffectsAlly;
+        AllyProtection = AP;
     }
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.transform.CompareTag(Target))
+        if (col.GetComponent<Character>() != null)
         {
-            Character c = col.gameObject.GetComponent<Character>();
-            if (c != null)
+            Character C = col.GetComponent<Character>();
+            if (col.transform.CompareTag(Target))
             {
-                c.Hit(Damage);
-                c.SetRecoil(col.transform.position - Origin.position, Knockback);
+                C.Hit(Damage);
+                C.AddStun(StunTime);
+                C.SetRecoil(col.transform.position - Origin.position, Knockback);
+            }
+            else if (AlsoEffectsAlly)
+            {
+                C.Hit(Damage / AllyProtection);
+                C.SetRecoil(col.transform.position - Origin.position, Knockback);
             }
         }
 
     }
-
+    /*
     public void ShowDebug(Color c)
     {
         DebugSprite.color = c;
     }
+    */
 }

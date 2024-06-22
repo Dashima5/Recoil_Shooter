@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 192c0b8f17a334d43b659ad5662137df, type: 3}
-  m_Name: E_MeleeTemp
+  m_Name: Chainsaw
   m_EditorClassIdentifier: 
-  name: EnemyMeleeTemp
+  name: Chainsaw
   damage: 1
   dash: 10
   knockback: 5
-  attackRate: 150
-  attackProlong: 25
-  SkillActiveCharge: 1
-  SkillProlong: 0
-  UserType: Enemy
-  target: Player
+  attackRate: 60
+  attackProlong: 30
+  SkillActiveCharge: 0.75
+  SkillProlong: 180
+  UserType: Player
+  target: Enemy

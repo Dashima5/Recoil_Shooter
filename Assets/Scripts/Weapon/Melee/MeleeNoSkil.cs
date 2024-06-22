@@ -13,4 +13,5 @@ public class MeleeNoSkil : Melee
     }
 
     override protected void SkilUpdate() { }
+    protected override void SkillEnd() { hitbox.gameObject.SetActive(false); }
 }

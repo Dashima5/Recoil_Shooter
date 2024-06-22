@@ -10,7 +10,7 @@ public class Carrier : Enemy
     {
         base.Start();
         SpawnerL = transform.Find("SpawnerL").GetComponent<Respawner>();
-        SpawnerR = transform.Find("SpawnerL").GetComponent<Respawner>();
+        SpawnerR = transform.Find("SpawnerR").GetComponent<Respawner>();
     }
 
     override protected void IdleLogic() { }
@@ -35,6 +35,7 @@ public class Carrier : Enemy
                 {
                     SpawnerL.Spawn();
                     SpawnerR.Spawn();
+                    RecoilVelocity = -playerDir * 5f;
                     AttackDecide = EnemyAttackType.NotDecided;
                     AttackTimer = 0f;
                 }

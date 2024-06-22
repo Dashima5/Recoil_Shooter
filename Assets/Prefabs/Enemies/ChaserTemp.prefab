@@ -97,10 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bb3333964b270c4eba6fb346393baa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StateNow: 0
   ShapeIdle: {fileID: 21300000, guid: 412801dde6d26b745aebb3c53d0496cd, type: 3}
   ShapeGuard: {fileID: 21300000, guid: de120e17908a17a48abbbc42755f5fec, type: 3}
   ShapeChase: {fileID: 21300000, guid: ad290d14bac6800489f007ef1c6b2027, type: 3}
+  ShapeStun: {fileID: 21300000, guid: 723e2246e7f9edb42bd7ce570c312ce7, type: 3}
 --- !u!1 &7633392605941810198
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,7 +111,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2029929649545848994}
   - component: {fileID: 8312238429748632390}
-  - component: {fileID: 1116727120934577043}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -186,18 +185,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &1116727120934577043
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7633392605941810198}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: afc16002c0a7e6d489035446f09d499f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8191921755495360183
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +196,7 @@ GameObject:
   - component: {fileID: 7843028146223475640}
   - component: {fileID: 8521748666933164258}
   - component: {fileID: 5007770364647698040}
-  - component: {fileID: 2910028171130270235}
+  - component: {fileID: 4691603020310527982}
   m_Layer: 0
   m_Name: Hitbox
   m_TagString: Untagged
@@ -225,13 +212,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8191921755495360183}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 0.18, y: 0, z: 0}
-  m_LocalScale: {x: 1.3, y: 1.5, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.85, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9155730154431248610}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8521748666933164258
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -273,7 +260,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7c857d49cf3de014c8b043b1831d9b27, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 0.2509804}
   m_FlipX: 0
   m_FlipY: 0
@@ -296,8 +283,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afc16002c0a7e6d489035446f09d499f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!61 &2910028171130270235
-BoxCollider2D:
+--- !u!60 &4691603020310527982
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -332,15 +319,41 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.25, y: 2.5}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Points:
+    m_Paths:
+    - - {x: 0.45499998, y: -0.71}
+      - {x: 0.53499997, y: -0.48999998}
+      - {x: 0.59499997, y: -0.22999999}
+      - {x: 0.59499997, y: 0.19}
+      - {x: 0.545, y: 0.45999998}
+      - {x: 0.445, y: 0.74}
+      - {x: 0.375, y: 0.85999995}
+      - {x: 0.255, y: 1.05}
+      - {x: 0.105, y: 1.25}
+      - {x: 0.015, y: 1.25}
+      - {x: -0.024999999, y: 1.1999999}
+      - {x: -0.625, y: 0.59999996}
+      - {x: -0.625, y: 0.55}
+      - {x: -0.525, y: 0.41}
+      - {x: -0.415, y: 0.12}
+      - {x: -0.415, y: -0.099999994}
+      - {x: -0.465, y: -0.31}
+      - {x: -0.49499997, y: -0.35999998}
+      - {x: -0.625, y: -0.53999996}
+      - {x: -0.625, y: -0.59}
+      - {x: -0.325, y: -0.9}
+      - {x: 0.024999999, y: -1.25}
+      - {x: 0.095, y: -1.25}
+      - {x: 0.205, y: -1.13}
+      - {x: 0.285, y: -1.03}
+      - {x: 0.39499998, y: -0.84}
+  m_UseDelaunayMesh: 0
 --- !u!1 &8652905302623315633
 GameObject:
   m_ObjectHideFlags: 0

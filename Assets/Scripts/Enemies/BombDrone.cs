@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BombDrone : Enemy { 
-    public GameObject Mybomb;
+public class BombDrone : Enemy {
+    private HitBox Explosion;
     public float Damage = 3f;
+    public float ExPower = 10f;
+    new protected void Start()
+    {
+        base.Start();
+        Explosion = GetComponentInChildren<HitBox>(true);
+        Explosion.Set(Damage, ExPower, "Player", this.gameObject.transform);
+        Explosion.gameObject.SetActive(false);
+    }
     override protected void IdleLogic() { }
     override protected void ChaseLogic()
     {
@@ -14,17 +22,21 @@ public class BombDrone : Enemy {
         {
             case EnemyAttackType.NotDecided:
                 if(playerDis <= MyData.MeleeRange){
+                    //RecoilVelocity = playerDir.normalized * 10f;
                     AttackDecide = EnemyAttackType.Gun;
                 }
                 break;
             case EnemyAttackType.Gun:
                 AttackTimer += Time.deltaTime;
+                Stopping = true;
+                sprite.color = Color.red;
                 if(AttackTimer >= MyData.GunAimTime)
                 {
-                    Bullet E = Instantiate(Mybomb).GetComponent<Bullet>();
-                    E.Set(Damage, 0f, transform.position, playerDir, MaxFuse: 0.25f);
-                    AttackTimer = 0f;
-                    Destroy(this.gameObject);
+                    sprite.color = Color.clear;
+                    GetComponent<Collider2D>().enabled = false;
+                    transform.Find("HeadArrow").gameObject.SetActive(false);
+                    Explosion.gameObject.SetActive(true);
+                    if(AttackTimer >= MyData.GunAimTime+0.25f)Destroy(this.gameObject);
                     break;
                 }
                 break;

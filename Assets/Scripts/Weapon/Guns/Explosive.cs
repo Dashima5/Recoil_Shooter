@@ -2,35 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Explosive : Bullet
+public class Explosive : Projectile
 {
     public float ExPower;
-    public float ExRange;
+    public float ExProlong;
     public bool AlsoEffectsAlly = false;
-    public float AllyProtection;
-    private void OnDestroy()
+    public float AllyProtection = 1f;
+    private HitBox ExHitbox;
+    //private bool Fused = false;
+    
+    new protected void Start()
     {
-        Collider2D[] colls = Physics2D.OverlapCircleAll(transform.position, ExRange);
-
-        for(int i  = 0; i< colls.Length; i++)
+        base.Start();
+        ExHitbox = GetComponentInChildren<HitBox>(true);
+        ExHitbox.gameObject.SetActive(false);
+    }
+    override protected void Terminate()
+    {
+        Rb.velocity = Vector3.zero;
+        ExHitbox.gameObject.SetActive(true);
+        ExHitbox.Set(Damage, ExPower, target, this.transform, AlsoEffectsAlly, AllyProtection);
+        GetComponent<SpriteRenderer>().enabled = false;
+        GetComponent<Collider2D>().enabled = false;
+        Destroy(gameObject, ExProlong);
+        /*
+        if (!Fused)
         {
-            if (colls[i].GetComponent<Character>() != null)
-            {
-                Character C = colls[i].GetComponent<Character>();
-                Vector3 ExDirection = colls[i].gameObject.transform.position - transform.position;
-                ExDirection.Normalize();
-                if (colls[i].transform.CompareTag(target))
-                {
-                    C.Hit(Damage);
-                    C.SetRecoil(ExDirection, ExPower);
-                }
-                else if (AlsoEffectsAlly)
-                {
-                    C.Hit(Damage / AllyProtection);
-                    C.SetRecoil(ExDirection, ExPower);
-                }
-            }
+            Fused = true;
+            
         }
-        
+        */
     }
 }

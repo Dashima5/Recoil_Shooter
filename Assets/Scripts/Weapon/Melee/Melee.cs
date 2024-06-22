@@ -51,24 +51,38 @@ public abstract class Melee : MonoBehaviour
                 //sprite.color = new Color(0,0,0,0.25f);
                 break;
             case MeleeState.Charge:
-                if (Timer < mydata.ChargeTime)
+                if (Timer < mydata.SkillActiveCharge)
                 {
                     Timer += Time.deltaTime;
-                    //sprite.color = new Color(1, 1, 1, Timer / mydata.ChargeTime);
+                    //sprite.color = new Color(1, 1, 1, Timer / mydata.SkillActiveCharge);
                 }
                 else { SkillCharge(Direction); }
                 break;
             case MeleeState.Attack:
-                if(ChargedTime >= mydata.ChargeTime)
+                Timer += Time.deltaTime;
+                if (ChargedTime >= mydata.SkillActiveCharge)
                 {
                     SkilUpdate();
+                    if (Timer >= mydata.SkillProlong / 60f)
+                    {
+                        SkillEnd();
+                        state = MeleeState.Unable;
+                        Timer = 0f;
+                        ChargedTime = 0f;
+                        break;
+                    }
                 }
-                Timer += Time.deltaTime;
-                if(Timer >= mydata.attackProlong/60f)
+                else//when didn't used skill
                 {
-                    hitbox.gameObject.SetActive(false);
-                    state = MeleeState.Unable;
-                    Timer = 0f;
+                    User.SetRecoil(Direction.normalized, mydata.dash);
+                    if (Timer >= mydata.attackProlong / 60f)
+                    {
+                        hitbox.gameObject.SetActive(false);
+                        state = MeleeState.Unable;
+                        Timer = 0f;
+                        ChargedTime = 0f;
+                        break;
+                    }
                 }
                 break;
             case MeleeState.Unable:
@@ -97,7 +111,7 @@ public abstract class Melee : MonoBehaviour
         ChargedTime = Timer;
         Timer = 0f;
         state = MeleeState.Attack;
-        if(ChargedTime < mydata.ChargeTime)
+        if(ChargedTime < mydata.SkillActiveCharge)
         {
             //sprite.color = Color.yellow;
             return NormalAttack(AttackDir);
@@ -110,19 +124,21 @@ public abstract class Melee : MonoBehaviour
 
     protected Vector3 NormalAttack(Vector3 AttackDir)
     {
-        hitbox.Set(mydata.damage, mydata.knockback, mydata.target);
         hitbox.gameObject.SetActive(true);
+        hitbox.Set(mydata.damage, mydata.knockback, mydata.target, User.gameObject.transform);
         return AttackDir * mydata.dash;
     }
     abstract protected void SkillCharge(Vector3 AttackDir);
     abstract protected Vector3 SkilStart(Vector3 AttackDir);
     abstract protected void SkilUpdate();
+    abstract protected void SkillEnd();
 
     public void CancelCharge()
     {
         if (state == MeleeState.Charge)
         {
             state = MeleeState.Unable;
+            ChargedTime = 0f;
             Timer = 0f;
         }
     }
