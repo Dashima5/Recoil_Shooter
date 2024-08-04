@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Pathfinding;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public enum EnemyState
 {
@@ -33,7 +34,9 @@ public abstract class Enemy : Character
     protected GameObject player;
     protected Vector3 playerDir = Vector3.zero;
     protected float playerDis;
-    protected RaycastHit2D RayToPlayer;
+    protected RaycastHit2D BlockBetweenPlayer;
+    protected bool CanSpotPlayer() => player != null && playerDis <= MyData.SearchRange
+        && (BlockBetweenPlayer.collider == null || MyData.WallOption != EnemyWallOption.AllBlocked);
 
     private Respawner MySpawner;
 
@@ -51,6 +54,7 @@ public abstract class Enemy : Character
     protected int Patrolindex = 0;
 
     protected bool Stopping = false;
+    protected float TurnSpeed;
 
     new protected void Start()
     {
@@ -64,6 +68,7 @@ public abstract class Enemy : Character
         InvokeRepeating("UpdatePath", 0f, 0.5f);
         playerDir = transform.position - player.transform.position;
         playerDis = playerDir.magnitude;
+        TurnSpeed = MyData.TurnSpeed;
 
         IdleAction += IdleLogic;
         ChaseAction += ChaseLogic;
@@ -98,7 +103,7 @@ public abstract class Enemy : Character
         }
         float RayDistance = MyData.SearchRange;
         if (playerDis <= MyData.SearchRange) { RayDistance = playerDis; }
-        RayToPlayer = Physics2D.Raycast(transform.position, playerDir, RayDistance, LayerMask.GetMask("Platform"));
+        BlockBetweenPlayer = Physics2D.Raycast(transform.position, playerDir, RayDistance, LayerMask.GetMask("Platform"));
 
         Stopping = false;
 
@@ -140,7 +145,7 @@ public abstract class Enemy : Character
 
                 }
 
-                if (playerDis <= MyData.SearchRange && RayToPlayer.collider == null && player != null)
+                if (CanSpotPlayer())
                 {
                     PathTarget = player.transform.position;
                     seeker.StartPath((Vector3)Rb.position, PathTarget, OnPathComplete);
@@ -150,20 +155,20 @@ public abstract class Enemy : Character
 
             case EnemyState.Chase:
                 if (player == null) { state = EnemyState.Idle; break; }
-                //PathTarget = player.transform.position;
+
                 rotZ = Mathf.Atan2(playerDir.y, playerDir.x) * Mathf.Rad2Deg;
 
                 ChaseAction();
-
-                if (playerDis > MyData.SearchRange && RayToPlayer.collider != null) { OutRangeTimer += Time.deltaTime; }
+                /*
+                if (playerDis > MyData.SearchRange && BlockBetweenPlayer.collider != null) { OutRangeTimer += Time.deltaTime; }
                 if (OutRangeTimer >= MyData.ChasePersistance) { state = EnemyState.Guard; OutRangeTimer = 0f; AttackTimer = 0f; }
-
+                */
                 break;
 
             case EnemyState.Guard:
                 Stopping = true;
                 if(player != null)PathTarget = player.transform.position;
-                if (playerDis <= MyData.SearchRange && RayToPlayer.collider == null)
+                if (CanSpotPlayer())
                 {
                     state = EnemyState.Chase;
                     OutRangeTimer = 0f;
@@ -176,7 +181,7 @@ public abstract class Enemy : Character
                 break;
         }
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), MyData.TurnSpeed * Time.deltaTime);
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), TurnSpeed * Time.deltaTime);
         if (Stopping) { MoveVelocity = Vector3.zero; }
         else MoveVelocity = PathDir * MyData.MoveSpeed;
     }
@@ -195,29 +200,29 @@ public abstract class Enemy : Character
     protected void Spacing()
     {
         if (MyData.ChaseType == EnemyChaseType.StopMeleeRange
-             && playerDis < MyData.MeleeRange && RayToPlayer.collider == null)
+             && playerDis < MyData.MeleeRange && BlockBetweenPlayer.collider == null)
         {
             Stopping = true;
         }
         else if (MyData.ChaseType == EnemyChaseType.StopMeleeRange
-             && playerDis < MyData.GunRange && RayToPlayer.collider == null)
+             && playerDis < MyData.GunRange && BlockBetweenPlayer.collider == null)
         {
             Stopping = true;
         }
         else if (MyData.ChaseType == EnemyChaseType.RemainMeleeRange
-             && playerDis < MyData.MeleeRange && RayToPlayer.collider == null)
+             && playerDis < MyData.MeleeRange && BlockBetweenPlayer.collider == null)
         {
             PathTarget = -playerDir * playerDis;
         }
         else if (MyData.ChaseType == EnemyChaseType.RemainGunRange
-             && playerDis < MyData.GunRange && RayToPlayer.collider == null)
+             && playerDis < MyData.GunRange && BlockBetweenPlayer.collider == null)
         {
             PathTarget = -playerDir * playerDis;
         }
         else { PathTarget = player.transform.position;}
     }
     abstract protected void UpdateLogic2();
-    protected override void HitEffect()
+    protected override void HitAddEffect(float D)
     {
         state = EnemyState.Chase;
         OutRangeTimer = 0f;
@@ -252,6 +257,16 @@ public abstract class Enemy : Character
         if(Patrol1 != null) { PatrolPoints.Add(Patrol1); }
         if(Patrol2 != null) { PatrolPoints.Add(Patrol2); }
     }
-
+    public override float GetTurnSpeed()
+    {
+        return MyData.TurnSpeed;
+    }
+    public override void SetTurnSpeed(float SettingTS)
+    {
+        TurnSpeed = SettingTS;
+    }
     public EnemyState GetState() { return state; }
+
+    public int GetCost() { return MyData.SpawnCost; }
+    public string GetName() { return MyData.name; }
 }

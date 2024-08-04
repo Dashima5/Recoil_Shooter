@@ -13,17 +13,17 @@ MonoBehaviour:
   m_Name: BombDrone
   m_EditorClassIdentifier: 
   name: Drone
-  MaxHp: 2
+  SpawnCost: 0
+  MaxHp: 1
   MoveSpeed: 13
   AttackDecideTime: 0
   MeleeRange: 1
   MeleeNormalCharge: 0
   GunRange: 0
-  GunAimTime: 0.5
+  GunAimTime: 0.25
   ChaseType: 0
   Size: 0.5
   SearchRange: 25
-  ChasePersistance: 10
   GuardPersistance: 25
   TurnSpeed: 200
   WallOption: 0

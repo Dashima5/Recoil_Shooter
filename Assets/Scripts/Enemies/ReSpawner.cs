@@ -20,12 +20,14 @@ public class Respawner : MonoBehaviour
     private Vector3 SpawnPoint;
     public bool CanSpawn() => TargetDestoryed && Respawn && RespwanTimeCurrent >= RespawnTime;
 
-    public GameObject PatrolPoint1 = null;
-    public GameObject PatrolPoint2 = null;
+    private GameObject PatrolPoint1;
+    private GameObject PatrolPoint2;
     protected void Start()
     {
         TargetParent = GameObject.Find("Enemies").transform;
         SpawnPoint = transform.Find("SpawnPoint").transform.position;
+        PatrolPoint1 = GameObject.Find("Player");
+        PatrolPoint2 = GameObject.Find("WaveManager");
         RespwanTimeCurrent = SpawnTimerStart;
     }
 

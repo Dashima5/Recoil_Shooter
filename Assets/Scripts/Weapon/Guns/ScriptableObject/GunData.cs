@@ -13,8 +13,7 @@ public class GunData : ScriptableObject
     public float range;
     public float magsize;
     public float fireRate;
-    public float reloadTime;
-    public float passiveReloadRate;
+    public float ReloadPerBullet;
     public GameObject bullet;
     public float bulletSpeed;
     public int bulletPershot;

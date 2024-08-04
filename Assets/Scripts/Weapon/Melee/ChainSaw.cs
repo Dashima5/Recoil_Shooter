@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class ChainSaw : Melee
 {
+    public float SkillDamageMod = 1f;
+    public float SkillProlong = 180f;
+    public float SkillGivingStunTime = 0f;
     private HitBox SkillHitbox;
     new protected void Start()
     {
@@ -17,7 +20,9 @@ public class ChainSaw : Melee
     protected override Vector3 SkilStart(Vector3 AttackDir)
     {
         SkillHitbox.gameObject.SetActive(true);
-        SkillHitbox.Set(mydata.damage, mydata.knockback, mydata.target, User.transform);
+        SkillHitbox.Set(mydata.damage* SkillDamageMod, mydata.knockback, mydata.target, User.transform, s: SkillGivingStunTime);
+        AttackTime = SkillProlong / 60f;
+        RecoverTime = mydata.attackRate / 60f;
         return AttackDir * mydata.dash;
     }
     protected override void SkilUpdate()
@@ -28,5 +33,9 @@ public class ChainSaw : Melee
     protected override void SkillEnd()
     {
         SkillHitbox.gameObject.SetActive(false);
+    }
+    protected override bool SkillEndCondition()
+    {
+        return false;
     }
 }

@@ -26,13 +26,13 @@ public class StandardEnemy : Enemy
                 if (AttackTimer >= MyData.AttackDecideTime)
                 {
                     if (MyMelee != null && playerDis <= MyData.MeleeRange && MyMelee.GetState() == MeleeState.Ready
-                        && RayToPlayer.collider == null)
+                        && BlockBetweenPlayer.collider == null)
                     {
                         AttackDecide = EnemyAttackType.Melee;
                         AttackTimer = 0f;
                         MyMelee.StartCharge(transform.right);
                     }
-                    else if (MyGun != null && playerDis <= MyData.GunRange && RayToPlayer.collider == null)
+                    else if (MyGun != null && playerDis <= MyData.GunRange && BlockBetweenPlayer.collider == null)
                     {
                         AttackDecide = EnemyAttackType.Gun;
                         AttackTimer = 0f;
@@ -57,7 +57,7 @@ public class StandardEnemy : Enemy
                 Stopping = true;
                 if (AttackTimer >= MyData.GunAimTime && MyGun.GetCanShoot())
                 {
-                    RecoilVelocity = MyGun.Fire(transform.right, transform.rotation.z);
+                    RecoilVelocity = MyGun.Fire(transform.right);
                     AttackDecide = EnemyAttackType.NotDecided;
                     AttackTimer = 0f;
                 }

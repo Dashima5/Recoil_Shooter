@@ -14,11 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: TpDagger
   damage: 1
-  dash: 7.5
-  knockback: 7.5
+  dash: 2.5
+  knockback: 5
   attackRate: 30
   attackProlong: 15
   SkillActiveCharge: 0.5
-  SkillProlong: 0
   UserType: Player
   target: Enemy

@@ -6,6 +6,7 @@ using UnityEngine;
 public class EnemyData : ScriptableObject
 {
     public new string name;
+    public int SpawnCost = 1;
 
     public float MaxHp = 1f;
     public float MoveSpeed = 1f;
@@ -18,7 +19,6 @@ public class EnemyData : ScriptableObject
     public EnemyChaseType ChaseType;
     public float Size;
     public float SearchRange;
-    public float ChasePersistance;
     public float GuardPersistance;
     public float TurnSpeed = 200f;
     public EnemyWallOption WallOption = EnemyWallOption.AllBlocked;

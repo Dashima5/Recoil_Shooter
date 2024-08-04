@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b71f83889c6990244aa5f878d1c9b976, type: 3}
+  m_Name: combatSMG
+  m_EditorClassIdentifier: 
+  name: SMG
+  damage: 1
+  recoil: 10
+  range: 20
+  magsize: 20
+  fireRate: 500
+  reloadTime: 3
+  passiveReloadRate: 3
+  bullet: {fileID: 990272475781579284, guid: 19cb67d81ddad334a9c4a6eedc8ef9bd, type: 3}
+  bulletSpeed: 35
+  bulletPershot: 1
+  spread: 0

@@ -18,9 +18,8 @@ MonoBehaviour:
   range: 15
   magsize: 4
   fireRate: 150
-  reloadTime: 1.5
-  passiveReloadRate: 3
+  ReloadPerBullet: 1
   bullet: {fileID: 990272475781579284, guid: 137423624b1625647b2173fbe4309b27, type: 3}
   bulletSpeed: 25
-  bulletPershot: 5
-  spread: 0.2
+  bulletPershot: 3
+  spread: 45

@@ -63,7 +63,7 @@ public abstract class Melee : MonoBehaviour
                 if (ChargedTime >= mydata.SkillActiveCharge)
                 {
                     SkilUpdate();
-                    if (Timer >= mydata.SkillProlong / 60f)
+                    if (Timer >= AttackTime || SkillEndCondition())
                     {
                         SkillEnd();
                         state = MeleeState.Unable;
@@ -75,7 +75,7 @@ public abstract class Melee : MonoBehaviour
                 else//when didn't used skill
                 {
                     User.SetRecoil(Direction.normalized, mydata.dash);
-                    if (Timer >= mydata.attackProlong / 60f)
+                    if (Timer >= AttackTime)
                     {
                         hitbox.gameObject.SetActive(false);
                         state = MeleeState.Unable;
@@ -88,7 +88,7 @@ public abstract class Melee : MonoBehaviour
             case MeleeState.Unable:
                 //sprite.color = Color.clear;
                 Timer += Time.deltaTime;
-                if(Timer >= mydata.attackRate / 60f)
+                if(Timer >= RecoverTime)
                 {
                     state = MeleeState.Ready;
                     Timer = 0f;
@@ -107,7 +107,7 @@ public abstract class Melee : MonoBehaviour
     }
     public Vector3 DoAttack(Vector3 AttackDir)
     {
-        Direction = AttackDir;
+        Direction = AttackDir.normalized;
         ChargedTime = Timer;
         Timer = 0f;
         state = MeleeState.Attack;
@@ -126,12 +126,16 @@ public abstract class Melee : MonoBehaviour
     {
         hitbox.gameObject.SetActive(true);
         hitbox.Set(mydata.damage, mydata.knockback, mydata.target, User.gameObject.transform);
+        AttackTime = mydata.attackProlong / 60f;
+        RecoverTime = mydata.attackRate / 60f;
         return AttackDir * mydata.dash;
     }
     abstract protected void SkillCharge(Vector3 AttackDir);
     abstract protected Vector3 SkilStart(Vector3 AttackDir);
     abstract protected void SkilUpdate();
     abstract protected void SkillEnd();
+    abstract protected bool SkillEndCondition();
+
 
     public void CancelCharge()
     {
@@ -140,6 +144,20 @@ public abstract class Melee : MonoBehaviour
             state = MeleeState.Unable;
             ChargedTime = 0f;
             Timer = 0f;
+        }
+    }
+    public void CancelAttack()
+    {
+        if(state == MeleeState.Attack)
+        {
+            state = MeleeState.Unable;
+            Timer = 0f;
+            if(ChargedTime >= mydata.SkillActiveCharge)
+            {
+                SkillEnd();
+            }
+            else { hitbox.gameObject.SetActive(false); }
+            ChargedTime = 0f;
         }
     }
 

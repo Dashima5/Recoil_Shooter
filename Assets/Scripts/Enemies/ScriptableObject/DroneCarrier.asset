@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: DroneCarrier
   m_EditorClassIdentifier: 
   name: Carrier
-  MaxHp: 10
+  SpawnCost: 3
+  MaxHp: 8
   MoveSpeed: 5
   AttackDecideTime: 2
   MeleeRange: 10
@@ -23,7 +24,6 @@ MonoBehaviour:
   ChaseType: 2
   Size: 1.2
   SearchRange: 25
-  ChasePersistance: 5
   GuardPersistance: 5
   TurnSpeed: 200
   WallOption: 2

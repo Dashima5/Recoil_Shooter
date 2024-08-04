@@ -65,4 +65,5 @@ public class Katana : Melee
 
     override protected void SkilUpdate() { }
     protected override void SkillEnd() { }
+    protected override bool SkillEndCondition() { return true; }
 }

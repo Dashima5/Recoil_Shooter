@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Shielder
   m_EditorClassIdentifier: 
   name: Shielder
-  MaxHp: 10
+  SpawnCost: 3
+  MaxHp: 5
   MoveSpeed: 8
-  AttackDecideTime: 0
-  MeleeRange: 0
-  MeleeNormalCharge: 0
-  GunRange: 0
-  GunAimTime: 0
-  ChaseType: 0
-  Size: 0
-  SearchRange: 0
-  ChasePersistance: 0
-  GuardPersistance: 0
-  TurnSpeed: 200
+  AttackDecideTime: 3
+  MeleeRange: 5
+  MeleeNormalCharge: 0.5
+  GunRange: 25
+  GunAimTime: 3
+  ChaseType: 2
+  Size: 0.3
+  SearchRange: 30
+  GuardPersistance: 5
+  TurnSpeed: 50
+  WallOption: 0

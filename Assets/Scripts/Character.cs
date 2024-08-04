@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public abstract class Character : MonoBehaviour
@@ -27,6 +28,8 @@ public abstract class Character : MonoBehaviour
         Rb = GetComponent<Rigidbody2D>();
         HP = MaxHP;
         UpdateAction += UpdateLogic;
+        Hit += HitBaseEffect;
+        Hit += HitAddEffect;
     }
 
     // Update is called once per frame
@@ -50,34 +53,34 @@ public abstract class Character : MonoBehaviour
 
     }
 
-    public void Hit(float D)
+    public Action<float> Hit;
+
+    private void HitBaseEffect(float D)
     {
         HP -= D;
-        HitEffect();
     }
-
-    abstract protected void HitEffect();
+    abstract protected void HitAddEffect(float D);
 
     public void SetRecoil(Vector3 KBdirection, float KBpower)
     {
         KBdirection.Normalize();
         RecoilVelocity = KBdirection * KBpower;
     }
-
     public Vector3 GetRecoil() { return RecoilVelocity; }
     abstract public Vector3 GetTargetDirection();
     public void AddStun(float HowMuch) { Stun += HowMuch; }
     abstract protected void WhenStun();
     public float GetStunTime() { return Stun; }
-
+    public void ClearStun() { Stun = 0f; }
     public void Heal(float h)
     {
         if (HP + h >= MaxHP) { HP = MaxHP; }
         else { HP += h; }
     }
-
     public void Teleport(Vector3 TP)
     {
         transform.position = TP;
     }
+    abstract public float GetTurnSpeed();
+    abstract public void SetTurnSpeed(float SettingTS);
 }

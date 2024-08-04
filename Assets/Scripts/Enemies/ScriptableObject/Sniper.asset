@@ -13,16 +13,17 @@ MonoBehaviour:
   m_Name: Sniper
   m_EditorClassIdentifier: 
   name: Sniper
-  MaxHp: 1
-  MoveSpeed: 1
-  AttackDecideTime: 0
-  MeleeRange: 0
+  SpawnCost: 3
+  MaxHp: 3
+  MoveSpeed: 4
+  AttackDecideTime: 5
+  MeleeRange: 5
   MeleeNormalCharge: 0
-  GunRange: 0
-  GunAimTime: 0
+  GunRange: 20
+  GunAimTime: 5
   ChaseType: 3
-  Size: 0
-  SearchRange: 0
-  ChasePersistance: 0
-  GuardPersistance: 0
-  TurnSpeed: 200
+  Size: 0.5
+  SearchRange: 30
+  GuardPersistance: 1.5
+  TurnSpeed: 75
+  WallOption: 1

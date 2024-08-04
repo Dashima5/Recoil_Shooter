@@ -23,7 +23,6 @@ MonoBehaviour:
   ChaseType: 2
   Size: 0.5
   SearchRange: 10
-  ChasePersistance: 1
   GuardPersistance: 4
   TurnSpeed: 200
   WallOption: 0

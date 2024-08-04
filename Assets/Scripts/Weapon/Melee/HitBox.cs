@@ -12,8 +12,9 @@ public class HitBox : MonoBehaviour
     protected float StunTime;
     protected string Target;
     protected Transform Origin;
-    private bool AlsoEffectsAlly = false;
-    private float AllyProtection = 1f;
+    protected bool AlsoEffectsAlly = false;
+    protected float AllyProtection = 1f;
+    //private bool Hitting = false;
     //private SpriteRenderer DebugSprite;
 
     protected void Start()

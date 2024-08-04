@@ -9,10 +9,10 @@ public class Player : Character
 {
     private Transform Top;
     private Melee MyMelee = null;
-    private Transform GunSlot;
-    private Gun[] Guns = new Gun[4];
-    private int Holdindex = 0;
-
+    private Gun MyGun = null;
+    //private Transform GunSlot;
+    //private Gun[] Guns = new Gun[4];
+    //private int Holdindex = 0;
     private PlayerFoot Foot;
 
     
@@ -27,6 +27,9 @@ public class Player : Character
     {
         base.Start();
         Top = transform.Find("Top");
+        MyMelee = Top.GetComponentInChildren<Melee>(true);
+        MyGun = Top.GetComponentInChildren<Gun>(true);
+        /*
         if(Top.Find("MeleeSlot").GetChild(0).TryGetComponent<Melee>(out var FindingMelee))
         {
             MyMelee = FindingMelee;
@@ -47,6 +50,7 @@ public class Player : Character
             }
         }
         if (ActiveWeapon == null) { Guns[Holdindex].gameObject.SetActive(true); }
+        */
 
         Foot = transform.Find("Foot").GetComponent<PlayerFoot>();
     }
@@ -66,13 +70,13 @@ public class Player : Character
         Top.rotation = Quaternion.Euler(0, 0, rotZ);
         if (Mathf.Abs(rotZ) > 90)
         {
-            Guns[Holdindex].Flip(true);
+            MyGun.Flip(true);
         }
-        else { Guns[Holdindex].Flip(false); }
+        else { MyGun.Flip(false); }
 
-        if(Input.GetMouseButton(0) && Guns[Holdindex].GetCanShoot())
+        if(Input.GetMouseButton(0) && MyGun.GetCanShoot())
         {
-            RecoilVelocity = Guns[Holdindex].Fire(TrackMouse(), rotZ); ;
+            RecoilVelocity = MyGun.Fire(TrackMouse());
         }
 
         if(Input.GetMouseButton(1) && MyMelee != null)
@@ -85,7 +89,8 @@ public class Player : Character
             RecoilVelocity = MyMelee.DoAttack(TrackMouse());
         }
 
-        if (Input.GetKeyDown(KeyCode.R)) { Guns[Holdindex].StartReload(); }//들고있는 무기의 수동 재장전 시작
+        if (Input.GetKeyDown(KeyCode.R)) { MyGun.StartReload(); }//들고있는 무기의 수동 재장전 시작
+        /*
         if (Input.GetKeyDown(KeyCode.Q))
         {
             int id = Holdindex + 1; id %= Guns.Length;
@@ -95,17 +100,13 @@ public class Player : Character
         if (Input.GetKeyDown(KeyCode.Alpha2)) { GunChange(1); }
         if (Input.GetKeyDown(KeyCode.Alpha3)) { GunChange(2); }
         if (Input.GetKeyDown(KeyCode.Alpha4)) { GunChange(3); }
-
-        for (int i = 0; i < Guns.Length; i++)
-        {
-             Guns[i].PassiveReload();
-        }
+        */
+        MyGun.PassiveReload();
         
         UI_Hp.text = "HP: " + HP.ToString("F2");
         SpeedX.text = "X(" + Rb.velocity.x.ToString("F1") + ")";
         SpeedY.text = "Y(" + Rb.velocity.y.ToString("F1") + ")";
-        Gunname.text = (Holdindex + 1).ToString() + ": " + Guns[Holdindex].GetName();
-        Ammocount.text = Guns[Holdindex].UIAmmocount();
+        Ammocount.text = MyGun.UIAmmocount();
         
     }
     private void FixedUpdate()
@@ -117,6 +118,7 @@ public class Player : Character
 
     }
 
+    /*
     private void GunChange(int id)
     {
 
@@ -133,8 +135,9 @@ public class Player : Character
         }
 
     }
+    */
 
-    protected override void HitEffect()
+    protected override void HitAddEffect(float D)
     {
     }
     public override Vector3 GetTargetDirection()
@@ -143,7 +146,10 @@ public class Player : Character
     }
     protected override void WhenStun()
     {
-        if (Guns[Holdindex] != null) { Guns[Holdindex].StopReload(); }
+        if(MyGun != null) { MyGun.StopReload(); }
         if(MyMelee != null) { MyMelee.CancelCharge(); }
     }
+
+    override public float GetTurnSpeed() { return 200f; }
+    override public void SetTurnSpeed(float SettingTS) { }
 }
