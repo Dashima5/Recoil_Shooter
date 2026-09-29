@@ -44,7 +44,7 @@ public class SkillFighter : Enemy
                 Stopping = true;
                 if (AttackTimer >= MyData.MeleeNormalCharge && MyMelee.GetState() == MeleeState.Charge)
                 {
-                    RecoilVelocity = MyMelee.DoAttack(transform.right);
+                    TakeRecoil(MyMelee.DoAttack(transform.right));
                 }
                 if (MyMelee.GetState() == MeleeState.Unable)
                 {
@@ -56,7 +56,7 @@ public class SkillFighter : Enemy
                 Stopping = true;
                 if (AttackTimer >= MyData.GunAimTime && MyMelee.GetState() == MeleeState.Charge)
                 {
-                    RecoilVelocity = MyMelee.DoAttack(transform.right);
+                    TakeRecoil(MyMelee.DoAttack(transform.right));
                 }
                 if (MyMelee.GetState() == MeleeState.Unable)
                 {

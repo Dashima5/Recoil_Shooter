@@ -76,18 +76,20 @@ public class Player : Character
 
         if(Input.GetMouseButton(0) && MyGun.GetCanShoot())
         {
-            RecoilVelocity = MyGun.Fire(TrackMouse());
+            //RecoilVelocity = MyGun.Fire(TrackMouse());
+            //Rb.AddForce(MyGun.Fire(TrackMouse()));
+            TakeRecoil(MyGun.Fire(TrackMouse()));
         }
 
-        if(Input.GetMouseButton(1) && MyMelee != null)
-        {
-            MyMelee.StartCharge(TrackMouse());
-        }
+        //if(Input.GetMouseButton(1) && MyMelee != null)
+        //{
+        //    MyMelee.StartCharge(TrackMouse());
+        //}
 
-        if (Input.GetMouseButtonUp(1) && MyMelee != null && MyMelee.GetState() == MeleeState.Charge)
-        {
-            RecoilVelocity = MyMelee.DoAttack(TrackMouse());
-        }
+        //if (Input.GetMouseButtonUp(1) && MyMelee != null && MyMelee.GetState() == MeleeState.Charge)
+        //{
+        //    RecoilVelocity = MyMelee.DoAttack(TrackMouse());
+        //}
 
         if (Input.GetKeyDown(KeyCode.R)) { MyGun.StartReload(); }//들고있는 무기의 수동 재장전 시작
         /*
@@ -113,9 +115,10 @@ public class Player : Character
     {
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
-        MoveVelocity = new Vector3(h * MoveSpeed, v * MoveSpeed, 0);
-        Foot.Set(MoveVelocity);
-
+        //Vector3 MoveVelocity = new Vector3(h * MoveSpeed, v * MoveSpeed, 0);
+        Steer(h);
+        //Foot.Set(MoveVelocity);
+        Foot.Set(Rb.velocity.normalized);
     }
 
     /*

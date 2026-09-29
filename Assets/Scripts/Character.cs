@@ -2,21 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.PlasticSCM.Editor.WebApi;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
     protected SpriteRenderer sprite;
     protected Rigidbody2D Rb;
-    protected Vector3 MoveVelocity = Vector3.zero;
-    protected Vector3 RecoilVelocity = Vector3.zero;
     protected Action UpdateAction;
     abstract protected void UpdateLogic();
 
     public float MaxHP = 1f;
     protected float HP;
     public float MoveSpeed = 1f;
-    //public float MaxRecoil;
+    public float MaxSpeed = 50f;
+    public float SteerSpeed = 0.0001f;
+    public float baseMoveSpeed = 5.0f;
 
     protected float rotZ = 0f;
 
@@ -37,19 +39,18 @@ public abstract class Character : MonoBehaviour
     {
         if (HP <= 0) { Destroy(gameObject); }
 
-        RecoilVelocity -= RecoilVelocity * 2f * Time.deltaTime;
-        if (RecoilVelocity.magnitude < 0.3f) { RecoilVelocity = Vector3.zero;}
+        //RecoilVelocity -= RecoilVelocity * 2f * Time.deltaTime;
+        //if (RecoilVelocity.magnitude < 0.3f) { RecoilVelocity = Vector3.zero;}
 
         if (Stun <= 0) { UpdateAction(); }
         else 
         {
             Stun -= Time.deltaTime;
-            MoveVelocity = Vector3.zero;
             WhenStun(); 
         }
 
 
-        Rb.velocity = MoveVelocity + RecoilVelocity;
+        //Rb.velocity = MoveVelocity + RecoilVelocity;
 
     }
 
@@ -61,12 +62,18 @@ public abstract class Character : MonoBehaviour
     }
     abstract protected void HitAddEffect(float D);
 
-    public void SetRecoil(Vector3 KBdirection, float KBpower)
-    {
-        KBdirection.Normalize();
-        RecoilVelocity = KBdirection * KBpower;
+    //public void SetRecoil(Vector3 KBdirection, float KBpower)
+    //{
+    //    KBdirection.Normalize();
+    //    RecoilVelocity = KBdirection * KBpower;
+    //}
+    //public Vector3 GetRecoil() { return RecoilVelocity; }
+    public void TakeRecoil(Vector3 recoil)
+    { 
+        Rb.AddForce(recoil, ForceMode2D.Impulse);
+        if(Rb.velocity.magnitude > MaxSpeed) { Rb.velocity = Rb.velocity.normalized * MaxSpeed; }
     }
-    public Vector3 GetRecoil() { return RecoilVelocity; }
+
     abstract public Vector3 GetTargetDirection();
     public void AddStun(float HowMuch) { Stun += HowMuch; }
     abstract protected void WhenStun();
@@ -83,4 +90,41 @@ public abstract class Character : MonoBehaviour
     }
     abstract public float GetTurnSpeed();
     abstract public void SetTurnSpeed(float SettingTS);
+
+    protected void StopVel()
+    {
+        Rb.velocity = Vector3.zero;
+    }
+    protected void Steer(
+        //Vector3 TargetDir)
+        float steerDir)
+    {
+        if (steerDir == 0) return;
+
+        Vector3 CurrentDir = Rb.velocity.normalized;
+        float CurrentSpeed = Rb.velocity.magnitude;
+
+        //if (CurrentSpeed <= baseMoveSpeed)
+        //{
+        //    Rb.velocity = TargetDir.normalized * baseMoveSpeed;
+        //    return;
+        //}
+
+        //Vector3 blended = CurrentDir + (SteerSpeed * Time.deltaTime);
+        //Rb.velocity = blended.normalized * CurrentSpeed;
+
+
+        float angleRad = - steerDir * SteerSpeed * Mathf.Deg2Rad * Time.fixedDeltaTime;
+
+        Vector2 v = Rb.velocity;
+        if (v.sqrMagnitude < 0.0001f) return; 
+
+        float cos = Mathf.Cos(angleRad);
+        float sin = Mathf.Sin(angleRad);
+
+        Rb.velocity = new Vector2(
+            v.x * cos - v.y * sin,
+            v.x * sin + v.y * cos
+        );
+    }
 }

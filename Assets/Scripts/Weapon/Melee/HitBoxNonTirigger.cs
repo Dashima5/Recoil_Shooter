@@ -16,12 +16,12 @@ public class HitBoxNonTirigger : HitBox
             {
                 C.Hit(Damage);
                 C.AddStun(StunTime);
-                C.SetRecoil(col.transform.position - Origin.position, Knockback);
+                C.TakeRecoil(col.transform.position - Origin.position *  Knockback);
             }
             else if (AlsoEffectsAlly)
             {
                 C.Hit(Damage / AllyProtection);
-                C.SetRecoil(col.transform.position - Origin.position, Knockback);
+                C.TakeRecoil(col.transform.position - Origin.position *  Knockback);
             }
         }
     }

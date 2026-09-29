@@ -13,7 +13,7 @@ public class HitBox : MonoBehaviour
     protected string Target;
     protected Transform Origin;
     protected bool AlsoEffectsAlly = false;
-    protected float AllyProtection = 1f;
+    protected float AllyProtection = 100f;
     //private bool Hitting = false;
     //private SpriteRenderer DebugSprite;
 
@@ -41,12 +41,12 @@ public class HitBox : MonoBehaviour
             {
                 C.Hit(Damage);
                 C.AddStun(StunTime);
-                C.SetRecoil(col.transform.position - Origin.position, Knockback);
+                //C.SetRecoil(col.transform.position - Origin.position, Knockback);
             }
             else if (AlsoEffectsAlly)
             {
-                C.Hit(Damage / AllyProtection);
-                C.SetRecoil(col.transform.position - Origin.position, Knockback);
+                C.Hit(Damage * ((100 - AllyProtection)/100));
+                //C.SetRecoil(col.transform.position - Origin.position, Knockback);
             }
         }
 

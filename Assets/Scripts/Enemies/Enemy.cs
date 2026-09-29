@@ -182,8 +182,8 @@ public abstract class Enemy : Character
         }
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, rotZ), TurnSpeed * Time.deltaTime);
-        if (Stopping) { MoveVelocity = Vector3.zero; }
-        else MoveVelocity = PathDir * MyData.MoveSpeed;
+        if (Stopping) { StopVel(); }
+        else Steer(PathDir.y);
     }
     private void FixedUpdate()
     {

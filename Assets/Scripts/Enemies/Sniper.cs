@@ -56,7 +56,7 @@ public class Sniper : Enemy
                 }
                 else if (AttackTimer >= MyData.GunAimTime && MyGun.GetCanShoot())
                 {
-                    RecoilVelocity = MyGun.Fire(transform.right);
+                    TakeRecoil(MyGun.Fire(transform.right));
                     AimingEnded = true;
                 }
                 WarningLine.SetPosition(1, EndPos);

@@ -35,7 +35,7 @@ public class Carrier : Enemy
                 {
                     SpawnerL.Spawn();
                     SpawnerR.Spawn();
-                    RecoilVelocity = -playerDir * 5f;
+                    //RecoilVelocity = -playerDir * 5f;
                     AttackDecide = EnemyAttackType.NotDecided;
                     AttackTimer = 0f;
                 }

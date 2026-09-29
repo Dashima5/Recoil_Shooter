@@ -74,7 +74,7 @@ public abstract class Melee : MonoBehaviour
                 }
                 else//when didn't used skill
                 {
-                    User.SetRecoil(Direction.normalized, mydata.dash);
+                    User.TakeRecoil(Direction.normalized * mydata.dash);
                     if (Timer >= AttackTime)
                     {
                         hitbox.gameObject.SetActive(false);

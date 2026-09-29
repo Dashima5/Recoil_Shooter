@@ -32,7 +32,7 @@ public class ChargeShield : Melee
     protected override void SkilUpdate()
     {
         //Direction = User.GetTargetDirection();
-        User.SetRecoil(Direction, mydata.dash * 2f);
+        User.TakeRecoil(Direction * mydata.dash * 2f);
     }
     protected override void SkillEnd()
     {

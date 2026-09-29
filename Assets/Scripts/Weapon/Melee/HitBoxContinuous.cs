@@ -15,7 +15,7 @@ public class HitBoxContinuous : HitBox
             {
                 c.Hit(Damage*Time.deltaTime);
                 c.AddStun(StunTime*Time.deltaTime);
-                c.SetRecoil(col.transform.position - Origin.position, Knockback);
+                c.TakeRecoil(col.transform.position - Origin.position *  Knockback);
             }
         }
 

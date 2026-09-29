@@ -44,7 +44,7 @@ public class StandardEnemy : Enemy
                 Stopping = true;
                 if (AttackTimer >= MyData.MeleeNormalCharge && MyMelee.GetState() == MeleeState.Charge)
                 {
-                    RecoilVelocity = MyMelee.DoAttack(transform.right);
+                   TakeRecoil(MyMelee.DoAttack(transform.right));
                 }
                 if(MyMelee.GetState() == MeleeState.Unable)
                 {
@@ -57,7 +57,7 @@ public class StandardEnemy : Enemy
                 Stopping = true;
                 if (AttackTimer >= MyData.GunAimTime && MyGun.GetCanShoot())
                 {
-                    RecoilVelocity = MyGun.Fire(transform.right);
+                    TakeRecoil(MyGun.Fire(transform.right));
                     AttackDecide = EnemyAttackType.NotDecided;
                     AttackTimer = 0f;
                 }

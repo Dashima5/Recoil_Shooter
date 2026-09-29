@@ -31,7 +31,7 @@ public class ChainSawEx : Melee
     protected override void SkilUpdate()
     {
         //Direction = User.GetTargetDirection();
-        User.SetRecoil(Direction, mydata.dash);
+        User.TakeRecoil(Direction * mydata.dash);
     }
     protected override void SkillEnd()
     {

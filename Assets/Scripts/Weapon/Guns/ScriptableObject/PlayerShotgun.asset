@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Shotgun
   damage: 1
-  recoil: 15
+  recoil: 20
   range: 15
   magsize: 4
   fireRate: 150

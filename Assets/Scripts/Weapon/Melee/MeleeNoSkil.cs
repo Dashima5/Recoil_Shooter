@@ -12,7 +12,7 @@ public class MeleeNoSkil : Melee
         return NormalAttack(AttackDir);
     }
 
-    override protected void SkilUpdate() { User.SetRecoil(Direction.normalized, mydata.dash); }
+    override protected void SkilUpdate() { User.TakeRecoil(Direction.normalized * mydata.dash); }
     protected override void SkillEnd() { hitbox.gameObject.SetActive(false); }
     protected override bool SkillEndCondition() { return false; }
 }
